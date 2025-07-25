@@ -26,10 +26,7 @@ namespace UniHub.Application.Services
         {
             try
             {
-                User user = await _unitOfWork.UserRepository.GetByEmailAsync(userDTO.Email!);
-                
-                if (user is not null) 
-                    throw new HttpRequestFailException(ApplicationMsg.USR0001, HttpStatusCode.BadRequest);
+                User user = userDTO.Adapt<User>();
 
                 await _unitOfWork.UserRepository.CreateAsync(user!);
                 _unitOfWork.Commit();
@@ -42,7 +39,7 @@ namespace UniHub.Application.Services
             {
                 _unitOfWork.Rollback();
 
-                throw new HttpRequestFailException(ApplicationMsg.EXC0001, HttpStatusCode.BadRequest);
+                throw new HttpRequestFailException(ApplicationMsg.USR0001, HttpStatusCode.BadRequest);
             }
             catch (Exception ex)
             {

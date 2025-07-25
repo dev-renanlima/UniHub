@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using UniHub.Domain.Entities;
+using UniHub.Domain.Enums;
 using UniHub.Domain.Interfaces.Repositories;
 using UniHub.Infrastructure.Context;
 
@@ -14,74 +15,72 @@ namespace UniHub.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public void Create(User user)
+        public void CreateAsync(User user)
         {
-            var command = _dbContext.ContextId CreateCommand();
+            using var command = _dbContext.CreateCommand();
 
             command.CommandText = "InsertUser";
             command.CommandType = CommandType.StoredProcedure;
-            command.Transaction = _dbRepositoryDTO.Transaction;
+            command.Transaction = _dbContext.CurrentTransaction;
 
-            command.Parameters.Add(_dbRepositoryDTO.DbContext!.CreateParameter(command, "@name", user.Name));
-            command.Parameters.Add(_dbRepositoryDTO.DbContext!.CreateParameter(command, "@email", user.Email));
-            command.Parameters.Add(_dbRepositoryDTO.DbContext!.CreateParameter(command, "@creationDate", DateTime.UtcNow));
-            command.Parameters.Add(_dbRepositoryDTO.DbContext!.CreateParameter(command, "@updateDate", DateTime.UtcNow));
+            command.Parameters.Add(_dbContext.CreateParameter(command, "@name", user.Name));
+            command.Parameters.Add(_dbContext.CreateParameter(command, "@email", user.Email));
+            command.Parameters.Add(_dbContext.CreateParameter(command, "@creationDate", DateTime.UtcNow));
+            command.Parameters.Add(_dbContext.CreateParameter(command, "@updateDate", DateTime.UtcNow));
 
             command.ExecuteNonQuery();
+        } 
+
+        public Task<List<User>> GetAllAsync()
+        {
+            throw new NotImplementedException();
         }
 
-        public User? GetUserByEmail(string email)
+        public Task<User?> GetByEmailAsync(string email)
         {
-            User user = null;
-
-            var command = _dbRepositoryDTO.DbContext!.CreateCommand(_dbRepositoryDTO.ConnectionScope!);
-
+            using var command = _dbContext.CreateCommand();
             command.CommandText = "GetUserByEmail";
             command.CommandType = CommandType.StoredProcedure;
-            command.Transaction = _dbRepositoryDTO.Transaction;
+            command.Transaction = _dbContext.CurrentTransaction;
 
-            command.Parameters.Add(_dbRepositoryDTO.DbContext.CreateParameter(command, "@endToEndId", endToEndId));
+            command.Parameters.Add(_dbContext.CreateParameter(command, "@Email", email));
 
             using var reader = command.ExecuteReader();
 
+            User? user = null;
+
             if (reader.Read())
-                user = new()
+            {
+                user = new User
                 {
-                    IdempotencyKey = (Guid)reader["IdempotencyKey"],
-                    PspRequestDate = (DateTime)reader["PspRequestDate"],
-                    SettlementMethod = (string)reader["SettlementMethod"],
-                    PriorityServiceLevel = Enum.Parse<ServiceLevel>((string)reader["PriorityServiceLevel"]),
-                    PriorityInstructionLevel = Enum.Parse<InstructionLevel>((string)reader["PriorityInstructionLevel"]),
-                    EndToEndId = (string)reader["EndToEndId"],
-                    SettlementAmount = (decimal)reader["SettlementAmount"],
-                    LocalInstrument = Enum.Parse<LocalInstrument>((string)reader["LocalInstrument"]),
-                    DebtorFullName = reader["DebtorFullName"] is DBNull ? null : (string)reader["DebtorFullName"],
-                    DebtorIdentification = reader["DebtorIdentification"] is DBNull ? null : (string)reader["DebtorIdentification"],
-                    DebtorAccountIdentification = reader["DebtorAccountIdentification"] is DBNull ? null : (string)reader["DebtorAccountIdentification"],
-                    DebtorAccountIssuer = reader["DebtorAccountIssuer"] is DBNull ? null : (string)reader["DebtorAccountIssuer"],
-                    DebtorAccountType = reader["DebtorAccountType"] is DBNull ? default : Enum.Parse<AccountType>((string)reader["DebtorAccountType"]),
-                    DebtorAgentIdentification = reader["DebtorAgentIdentification"] is DBNull ? null : (string)reader["DebtorAgentIdentification"],
-                    CreditorIdentification = reader["CreditorIdentification"] is DBNull ? null : (string)reader["CreditorIdentification"],
-                    CreditorAccountIdentification = reader["CreditorAccountIdentification"] is DBNull ? null : (string)reader["CreditorAccountIdentification"],
-                    CreditorAccountIssuer = reader["CreditorAccountIssuer"] is DBNull ? null : (string)reader["CreditorAccountIssuer"],
-                    CreditorAccountType = reader["CreditorAccountType"] is DBNull ? default : Enum.Parse<AccountType>((string)reader["CreditorAccountType"]),
-                    CreditorAgentIdentification = reader["CreditorAgentIdentification"] is DBNull ? null : (string)reader["CreditorAgentIdentification"],
-                    Purpose = Enum.Parse<TransactionPurpose>((string)reader["Purpose"]),
-                    UserText = reader["UserText"] is DBNull ? null : (string)reader["UserText"],
-                    Status = Enum.Parse<PixOutStatus>((string)reader["Status"]),
-                    LocalIdentifier = reader["LocalIdentifier"] is DBNull ? null : (string)reader["LocalIdentifier"],
-                    IssueDate = reader["IssueDate"] is DBNull ? DateTime.MinValue : (DateTime)reader["IssueDate"],
-                    InterbankSettlementDate = reader["InterbankSettlementDate"] is DBNull ? DateTime.MinValue : (DateTime)reader["InterbankSettlementDate"],
-                    EffectiveInterbankSettlementDate = reader["EffectiveInterbankSettlementDate"] is DBNull ? DateTime.MinValue : (DateTime)reader["EffectiveInterbankSettlementDate"],
-                    AgentType = reader["AgentType"] is DBNull ? default : Enum.Parse<AgentType>((string)reader["AgentType"]),
-                    AdjustmentsAmount = reader["AdjustmentsAmount"] is DBNull ? null : (string)reader["AdjustmentsAmount"],
-                    AdjustmentsReason = reader["AdjustmentsReason"] is DBNull ? null : (string)reader["AdjustmentsReason"],
-                    ReqIdentifier = reader["ReqIdentifier"] is DBNull ? null : reader["ReqIdentifier"].ToString(),
-                    ClientRequestId = reader["ClientRequestId"] is DBNull ? null : (Guid?)reader["ClientRequestId"],
+                    Id = reader["Id"] is DBNull ? null : (long?)reader["Id"],
+                    Name = reader["Name"] is DBNull ? null : (string)reader["Name"],
+                    Email = reader["Email"] is DBNull ? null : (string)reader["Email"],
+                    Role = Enum.Parse<UserRole>((string)reader["Role"]),
+                    CreationDate = reader["CreationDate"] is DBNull ? null : (DateTime?)reader["CreationDate"],
+                    UpdateDate = reader["UpdateDate"] is DBNull ? null : (DateTime?)reader["UpdateDate"],
+                    DeletionDate = reader["DeletionDate"] is DBNull ? null : (DateTime?)reader["DeletionDate"]
                 };
+            }
+            else
+                return Task.FromResult<User?>(null);
 
+            return Task.FromResult<User?>(user);
+        }
 
-            return user;
+        public Task<User?> GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IUserRepository.CreateAsync(User user)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<User?> IUserRepository.GetByEmailAsync(string email)
+        {
+            throw new NotImplementedException();
         }
 
 

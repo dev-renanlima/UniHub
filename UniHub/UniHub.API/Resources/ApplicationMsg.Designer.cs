@@ -70,7 +70,7 @@ namespace UniHub.API.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Já existe um usuário com o email informado..
+        ///   Looks up a localized string similar to Já existe um usuário com os parâmetros informados..
         /// </summary>
         public static string USR0001 {
             get {

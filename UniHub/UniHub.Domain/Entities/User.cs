@@ -4,7 +4,7 @@ namespace UniHub.Domain.Entities
 {
     public class User : BaseEntity
     {
-        public required string Name { get; set; }
+        public string? Name { get; set; }
 
         public string? Email { get; set; }
 

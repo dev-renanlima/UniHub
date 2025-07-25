@@ -121,6 +121,6 @@
     <value>Houve um erro no sistema. Tente novamente mais tarde.</value>
   </data>
   <data name="USR0001" xml:space="preserve">
-    <value>Já existe um usuário com o email informado.</value>
+    <value>Já existe um usuário com os parâmetros informados.</value>
   </data>
 </root>
