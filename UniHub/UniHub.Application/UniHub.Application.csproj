@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\UniHub.API\UniHub.API.csproj" />
+    <ProjectReference Include="..\UniHub.Domain\UniHub.Domain.csproj" />
+    <ProjectReference Include="..\UniHub.Infrastructure\UniHub.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
