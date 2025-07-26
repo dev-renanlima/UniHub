@@ -11,7 +11,7 @@ namespace UniHub.API.Mapper
     {
         public static void RegisterCourseMaps(this IServiceCollection services)
         {
-            TypeAdapterConfig<AddMemberByCodeModel, CourseDTO>
+            TypeAdapterConfig<CreateCourseModel, CourseDTO>
                     .NewConfig()
                     .Map(dest => dest.AdminId, src => src.Body!.AdminId)
                     .Map(dest => dest.Name, src => src.Body!.Name)

@@ -1,11 +1,10 @@
 ﻿using Mapster;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 using System.Net;
 using UniHub.Application.Exceptions;
 using UniHub.Application.Resources;
 using UniHub.Domain.DTOs;
 using UniHub.Domain.DTOs.Responses.Course;
-using UniHub.Domain.DTOs.Responses.User;
 using UniHub.Domain.Entities;
 using UniHub.Domain.Enums;
 using UniHub.Domain.Interfaces.Repositories;
@@ -26,25 +25,25 @@ namespace UniHub.Application.Services
             //_registerLog = registerLog;
         }
 
-        public async Task<CreateCourseResponseDTO> Create(CourseDTO courseDTO)
+        public async Task<CreateCourseResponseDTO> CreateAsync(CourseDTO courseDTO)
         {
             try
             {
                 var course = courseDTO.Adapt<Course>();
 
-                var user = await _userService.GetUserByClerkId(course.AdminId!);
+                var user = await _userService.GetUserByClerkIdAsync(course.AdminId!);
 
                 if (user.Role != UserRole.ADMIN.ToString())
                     throw new HttpRequestFailException(nameof(ApplicationMsg.USR0003), ApplicationMsg.USR0003, HttpStatusCode.BadRequest);
 
-                _unitOfWork.CourseRepository.Create(course!);
+                await _unitOfWork.CourseRepository.CreateAsync(course!);
                 _unitOfWork.Commit();
 
                 CreateCourseResponseDTO? createCourseResponseDTO = course.Adapt<CreateCourseResponseDTO>();
 
                 return createCourseResponseDTO;
             }
-            catch (SqlException ex) when (ex.Number is 2601 or 2627)
+            catch (PostgresException ex) when (ex.SqlState == PostgresErrorCodes.UniqueViolation)
             {
                 _unitOfWork.Rollback();
 

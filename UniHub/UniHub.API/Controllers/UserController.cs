@@ -25,7 +25,7 @@ public class UserController : ControllerBase
     {
         UserDTO userDTO = createUserModel.Adapt<UserDTO>();
 
-        CreateUserResponseDTO response = await _userService.Create(userDTO);
+        CreateUserResponseDTO response = await _userService.CreateAsync(userDTO);
 
         return StatusCode(StatusCodes.Status201Created, response);
     }
@@ -33,7 +33,7 @@ public class UserController : ControllerBase
     [HttpGet("/getUserByClerkId/{clerkId}")]
     public async Task<IActionResult> GetUserByClerkId([FromRoute] string clerkId)
     {
-        GetUserResponseDTO? response = await _userService.GetUserByClerkId(clerkId);
+        GetUserResponseDTO? response = await _userService.GetUserByClerkIdAsync(clerkId);
 
         return StatusCode(StatusCodes.Status200OK, response);
     }

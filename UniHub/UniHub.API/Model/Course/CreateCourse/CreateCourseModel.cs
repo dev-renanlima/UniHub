@@ -2,8 +2,8 @@
 
 namespace UniHub.API.Model.Course.CreateCourse;
 
-public class AddMemberByCodeModel
+public class CreateCourseModel
 {
     [FromBody]
-    public AddMemberByCodeBody? Body { get; set; }
+    public CreateCourseBody? Body { get; set; }
 }

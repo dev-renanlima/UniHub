@@ -14,21 +14,21 @@ namespace UniHub.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public void Create(Course course)
+        public async Task<long> CreateAsync(Course course)
         {
             using var command = _dbContext.CreateCommand();
 
-            command.CommandText = "InsertCourse";
-            command.CommandType = CommandType.StoredProcedure;
-            command.Transaction = _dbContext.CurrentTransaction;
+            command.CommandText = "SELECT public.\"InsertCourse\"(@p_AdminId, @p_Name, @p_Code, @p_CreationDate, @p_UpdateDate)";
+            command.CommandType = CommandType.Text; 
 
-            command.Parameters.Add(_dbContext.CreateParameter(command, "@adminId", course.AdminId));
-            command.Parameters.Add(_dbContext.CreateParameter(command, "@name", course.Name));
-            command.Parameters.Add(_dbContext.CreateParameter(command, "@code", course.Code));
-            command.Parameters.Add(_dbContext.CreateParameter(command, "@creationDate", DateTime.UtcNow));
-            command.Parameters.Add(_dbContext.CreateParameter(command, "@updateDate", DateTime.UtcNow));
+            _dbContext.CreateParameter(command, "p_AdminId", course.AdminId);
+            _dbContext.CreateParameter(command, "p_Name", course.Name);
+            _dbContext.CreateParameter(command, "p_Code", course.Code);
+            _dbContext.CreateParameter(command, "p_CreationDate", DateTime.UtcNow);
+            _dbContext.CreateParameter(command, "p_UpdateDate", DateTime.UtcNow);
 
-            command.ExecuteNonQuery();
+            var result = await command.ExecuteScalarAsync();
+            return (long)result!;
         } 
 
         public Task<List<Course>> GetAllAsync()

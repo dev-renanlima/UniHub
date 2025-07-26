@@ -65,6 +65,7 @@ namespace UniHub.Infrastructure.Repositories
         private void ClearRepositories()
         {
             _userRepository = null;
+            _courseRepository = null;
         }
     }
 }

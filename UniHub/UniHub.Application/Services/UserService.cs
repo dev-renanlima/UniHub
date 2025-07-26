@@ -1,5 +1,5 @@
 ﻿using Mapster;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 using System.Net;
 using UniHub.Application.Exceptions;
 using UniHub.Application.Resources;
@@ -22,20 +22,20 @@ namespace UniHub.Application.Services
             //_registerLog = registerLog;
         }
 
-        public async Task<CreateUserResponseDTO> Create(UserDTO userDTO)
+        public async Task<CreateUserResponseDTO> CreateAsync(UserDTO userDTO)
         {
             try
             {
                 User user = userDTO.Adapt<User>();
 
-                _unitOfWork.UserRepository.Create(user!);
+                await _unitOfWork.UserRepository.CreateAsync(user!);
                 _unitOfWork.Commit();
 
                 CreateUserResponseDTO? createUserResponseDTO = user.Adapt<CreateUserResponseDTO>();
 
                 return createUserResponseDTO;
             }
-            catch (SqlException ex) when (ex.Number is 2601 or 2627)
+            catch (PostgresException ex) when (ex.SqlState == PostgresErrorCodes.UniqueViolation)
             {
                 _unitOfWork.Rollback();
 
@@ -51,11 +51,11 @@ namespace UniHub.Application.Services
             }
         }
 
-        public async Task<GetUserResponseDTO> GetUserByClerkId(string clerkId)
+        public async Task<GetUserResponseDTO> GetUserByClerkIdAsync(string clerkId)
         {
             try
             {
-                User? user = await _unitOfWork.UserRepository.GetByClerkIdAsync(clerkId)
+                User? user = await _unitOfWork.UserRepository.GetUserByClerkIdAsync(clerkId)
                     ?? throw new HttpRequestFailException(nameof(ApplicationMsg.USR0002), string.Format(ApplicationMsg.USR0002, clerkId), HttpStatusCode.NotFound);
 
                 _unitOfWork.Commit();

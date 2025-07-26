@@ -5,6 +5,6 @@ namespace UniHub.Domain.Interfaces.Services
 {
     public interface ICourseService
     {
-        Task<CreateCourseResponseDTO> Create(CourseDTO courseDTO);
+        Task<CreateCourseResponseDTO> CreateAsync(CourseDTO courseDTO);
     }
 }

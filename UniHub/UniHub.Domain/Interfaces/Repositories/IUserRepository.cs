@@ -4,9 +4,9 @@ namespace UniHub.Domain.Interfaces.Repositories
 {
     public interface IUserRepository
     {
-        void Create(User user);
-        Task<User?> GetByIdAsync(int id);
-        Task<User?> GetByClerkIdAsync(string clerkId);
-        Task<List<User>> GetAllAsync();
+        Task<long> CreateAsync(User user);
+        Task<User?> GetUserByIdAsync(int id);
+        Task<User?> GetUserByClerkIdAsync(string clerkId);
+        Task<List<User>> GetAllUsersAsync();
     }
 }
