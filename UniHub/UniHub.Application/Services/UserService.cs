@@ -39,7 +39,7 @@ namespace UniHub.Application.Services
             {
                 _unitOfWork.Rollback();
 
-                throw new HttpRequestFailException(ApplicationMsg.USR0001, HttpStatusCode.BadRequest);
+                throw new HttpRequestFailException(nameof(ApplicationMsg.USR0001), ApplicationMsg.USR0001, HttpStatusCode.BadRequest);
             }
             catch (Exception ex)
             {
@@ -56,19 +56,13 @@ namespace UniHub.Application.Services
             try
             {
                 User? user = await _unitOfWork.UserRepository.GetByClerkIdAsync(clerkId)
-                    ?? throw new HttpRequestFailException(string.Format(ApplicationMsg.USR0002, clerkId), HttpStatusCode.NotFound);
+                    ?? throw new HttpRequestFailException(nameof(ApplicationMsg.USR0002), string.Format(ApplicationMsg.USR0002, clerkId), HttpStatusCode.NotFound);
 
                 _unitOfWork.Commit();
 
                 GetUserResponseDTO? getUserResponseDTO = user.Adapt<GetUserResponseDTO>();
 
                 return getUserResponseDTO;
-            }
-            catch (SqlException ex) //when (ex.Number is 2601 or 2627)
-            {
-                _unitOfWork.Rollback();
-
-                throw new HttpRequestFailException(string.Format(ApplicationMsg.USR0002, clerkId), HttpStatusCode.NotFound);
             }
             catch (Exception ex)
             {

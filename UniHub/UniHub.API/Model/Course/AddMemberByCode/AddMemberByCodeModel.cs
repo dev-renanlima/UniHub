@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace UniHub.API.Model.Course.CreateCourse;
+namespace UniHub.API.Model.Course.AddMemberByCode;
 
 public class AddMemberByCodeModel
 {

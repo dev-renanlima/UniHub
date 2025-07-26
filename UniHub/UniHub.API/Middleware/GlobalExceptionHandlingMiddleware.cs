@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text.Json;
+using UniHub.API.Model;
 using UniHub.API.Resources;
+using UniHub.Application.Exceptions;
 
 namespace UniHub.API.Middleware;
 
@@ -18,23 +20,41 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
         {
             await next(context);
         }
-        catch (Exception e)
+        catch (HttpRequestFailException ex)
+        {
+            _logger.LogWarning(ex, ex.Message);
+
+            ProblemResponse problem = new()
+            {
+                StatusCode = (int)ex.StatusCode,
+                ErrorCode = ex.ErrorCode,
+                Detail = ex.Message,
+                CorrelationId = ex.CorrelationId
+            };
+
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)ex.StatusCode;
+
+            await context.Response.WriteAsync(JsonSerializer.Serialize(problem));
+        }
+        catch (Exception ex)
         {
 
-            _logger.LogError(e, e.Message);
+            _logger.LogError(ex, ex.Message);
 
-            ProblemDetails problem = new()
+            ProblemResponse problem = new()
             {
-                Status = (int)HttpStatusCode.InternalServerError,
-                Type = nameof(ApiMsg.API0001),
+                StatusCode = (int)HttpStatusCode.InternalServerError,
+                ErrorCode = nameof(ApiMsg.API0001),
                 Detail = ApiMsg.API0001
             };
 
             var jsonResponse = JsonSerializer.Serialize(problem);
 
-            await context.Response.WriteAsync(jsonResponse);
-
             context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+            await context.Response.WriteAsync(jsonResponse);
         }
     }
 }

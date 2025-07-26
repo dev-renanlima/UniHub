@@ -77,5 +77,14 @@ namespace UniHub.Application.Resources {
                 return ResourceManager.GetString("USR0002", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to O usuário não pode realizar esta ação.
+        /// </summary>
+        public static string USR0003 {
+            get {
+                return ResourceManager.GetString("USR0003", resourceCulture);
+            }
+        }
     }
 }

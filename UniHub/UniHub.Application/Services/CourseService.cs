@@ -5,7 +5,9 @@ using UniHub.Application.Exceptions;
 using UniHub.Application.Resources;
 using UniHub.Domain.DTOs;
 using UniHub.Domain.DTOs.Responses.Course;
+using UniHub.Domain.DTOs.Responses.User;
 using UniHub.Domain.Entities;
+using UniHub.Domain.Enums;
 using UniHub.Domain.Interfaces.Repositories;
 using UniHub.Domain.Interfaces.Services;
 
@@ -30,7 +32,10 @@ namespace UniHub.Application.Services
             {
                 var course = courseDTO.Adapt<Course>();
 
-                await _userService.GetUserByClerkId(course.AdminId!);
+                var user = await _userService.GetUserByClerkId(course.AdminId!);
+
+                if (user.Role != UserRole.ADMIN.ToString())
+                    throw new HttpRequestFailException(nameof(ApplicationMsg.USR0003), ApplicationMsg.USR0003, HttpStatusCode.BadRequest);
 
                 _unitOfWork.CourseRepository.Create(course!);
                 _unitOfWork.Commit();
@@ -43,7 +48,7 @@ namespace UniHub.Application.Services
             {
                 _unitOfWork.Rollback();
 
-                throw new HttpRequestFailException(ApplicationMsg.USR0001, HttpStatusCode.BadRequest);
+                throw new HttpRequestFailException(nameof(ApplicationMsg.USR0001), ApplicationMsg.USR0001, HttpStatusCode.BadRequest);
             }
             catch (Exception ex)
             {

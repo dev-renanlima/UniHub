@@ -2,7 +2,7 @@
 
 namespace UniHub.API.Model.Course.CreateCourse;
 
-public class CreateCourseBody
+public class AddMemberByCodeBody
 {
     public string AdminId { get; set; } = null!;
 
