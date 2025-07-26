@@ -1,38 +1,29 @@
-using Microsoft.EntityFrameworkCore;
 using UniHub.API.Mapper;
 using UniHub.API.Middleware;
-using UniHub.Application.Services;
-using UniHub.Domain.Interfaces.Repositories;
-using UniHub.Domain.Interfaces.Services;
-using UniHub.Infrastructure.Context;
-using UniHub.Infrastructure.Repositories;
+using UniHub.CrossCutting.Ioc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// Serviços nativos da aplicação
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 builder.Services.AddLogging();
 
+// Configuração do AutoMapper
 builder.Services.RegisterMaps();
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("UniHubConnection")));
-
+// Middleware
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+// Injeções do projeto centralizadas
+builder.Services.AddUniHubContext(builder.Configuration);
+builder.Services.AddUniHubServices();
+builder.Services.AddUniHubRepositories();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -40,11 +31,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
-
 app.MapControllers();
 
 app.Run();

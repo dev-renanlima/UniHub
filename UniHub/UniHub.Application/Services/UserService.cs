@@ -29,7 +29,7 @@ namespace UniHub.Application.Services
                 User user = userDTO.Adapt<User>();
 
                 _unitOfWork.UserRepository.Create(user!);
-                _unitOfWork.Rollback();
+                _unitOfWork.Commit();
 
                 CreateUserResponseDTO? createUserResponseDTO = user.Adapt<CreateUserResponseDTO>();
 
@@ -40,6 +40,35 @@ namespace UniHub.Application.Services
                 _unitOfWork.Rollback();
 
                 throw new HttpRequestFailException(ApplicationMsg.USR0001, HttpStatusCode.BadRequest);
+            }
+            catch (Exception ex)
+            {
+                _unitOfWork.Rollback();
+
+                //_registerLog.RegisterExceptionLog(action: "CreateUser", details: null, ex);
+
+                throw;
+            }
+        }
+
+        public async Task<GetUserResponseDTO> GetUserByClerkId(string clerkId)
+        {
+            try
+            {
+                User? user = await _unitOfWork.UserRepository.GetByClerkIdAsync(clerkId)
+                    ?? throw new HttpRequestFailException(string.Format(ApplicationMsg.USR0002, clerkId), HttpStatusCode.NotFound);
+
+                _unitOfWork.Commit();
+
+                GetUserResponseDTO? getUserResponseDTO = user.Adapt<GetUserResponseDTO>();
+
+                return getUserResponseDTO;
+            }
+            catch (SqlException ex) //when (ex.Number is 2601 or 2627)
+            {
+                _unitOfWork.Rollback();
+
+                throw new HttpRequestFailException(string.Format(ApplicationMsg.USR0002, clerkId), HttpStatusCode.NotFound);
             }
             catch (Exception ex)
             {

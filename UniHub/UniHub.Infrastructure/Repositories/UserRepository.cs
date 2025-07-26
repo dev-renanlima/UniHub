@@ -24,6 +24,7 @@ namespace UniHub.Infrastructure.Repositories
             command.Transaction = _dbContext.CurrentTransaction;
 
             command.Parameters.Add(_dbContext.CreateParameter(command, "@clerkId", user.ClerkId));
+            command.Parameters.Add(_dbContext.CreateParameter(command, "@role", user.Role.ToString()));
             command.Parameters.Add(_dbContext.CreateParameter(command, "@name", user.Name));
             command.Parameters.Add(_dbContext.CreateParameter(command, "@creationDate", DateTime.UtcNow));
             command.Parameters.Add(_dbContext.CreateParameter(command, "@updateDate", DateTime.UtcNow));
@@ -58,8 +59,7 @@ namespace UniHub.Infrastructure.Repositories
                     Name = reader["Name"] is DBNull ? null : (string)reader["Name"],
                     Role = Enum.Parse<UserRole>((string)reader["Role"]),
                     CreationDate = reader["CreationDate"] is DBNull ? null : (DateTime?)reader["CreationDate"],
-                    UpdateDate = reader["UpdateDate"] is DBNull ? null : (DateTime?)reader["UpdateDate"],
-                    DeletionDate = reader["DeletionDate"] is DBNull ? null : (DateTime?)reader["DeletionDate"]
+                    UpdateDate = reader["UpdateDate"] is DBNull ? null : (DateTime?)reader["UpdateDate"]
                 };
             }
             else

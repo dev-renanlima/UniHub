@@ -120,4 +120,7 @@
   <data name="USR0001" xml:space="preserve">
     <value>Já existe um usuário com os parâmetros informados.</value>
   </data>
+  <data name="USR0002" xml:space="preserve">
+    <value>Não foi encontrado nenhum usuário com o Id informado: {0}</value>
+  </data>
 </root>

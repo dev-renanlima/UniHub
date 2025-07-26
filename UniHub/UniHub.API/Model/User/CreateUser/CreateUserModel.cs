@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace UniHub.API.Model.User.CreateUser
+namespace UniHub.API.Model.User.CreateUser;
+
+public class CreateUserModel
 {
-    public class CreateUserModel
-    {
-        [FromBody]
-        public CreateUserBody? Body { get; set; }
-    }
+    [FromBody]
+    public CreateUserBody? Body { get; set; }
 }

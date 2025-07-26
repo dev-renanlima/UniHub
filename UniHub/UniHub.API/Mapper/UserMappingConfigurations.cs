@@ -27,6 +27,12 @@ namespace UniHub.API.Mapper
                     .Map(dest => dest.ClerkId, src => src.ClerkId)
                     .Map(dest => dest.Name, src => src.Name)
                     .Map(dest => dest.Role, src => src.Role);
+
+            TypeAdapterConfig<User, GetUserResponseDTO>
+                    .NewConfig()
+                    .Map(dest => dest.ClerkId, src => src.ClerkId)
+                    .Map(dest => dest.Name, src => src.Name)
+                    .Map(dest => dest.Role, src => src.Role);
         }
     }
 }

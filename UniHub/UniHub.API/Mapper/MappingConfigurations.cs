@@ -8,6 +8,7 @@ namespace UniHub.API.Mapper
         public static IServiceCollection RegisterMaps(this IServiceCollection services)
         { 
             services.RegisterUserMaps();
+            services.RegisterCourseMaps();
 
             TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly());
 

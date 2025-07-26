@@ -10,6 +10,8 @@ namespace UniHub.Domain.Interfaces.Repositories
     {
         IUserRepository UserRepository { get; }
 
+        ICourseRepository CourseRepository { get; }
+
         void Commit();
 
         void Rollback();

@@ -68,5 +68,14 @@ namespace UniHub.Application.Resources {
                 return ResourceManager.GetString("USR0001", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Não foi encontrado nenhum usuário com o Id informado: {0}.
+        /// </summary>
+        public static string USR0002 {
+            get {
+                return ResourceManager.GetString("USR0002", resourceCulture);
+            }
+        }
     }
 }

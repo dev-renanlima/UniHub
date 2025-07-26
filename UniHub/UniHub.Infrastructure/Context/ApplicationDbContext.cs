@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using UniHub.Domain.Entities;
+using UniHub.Infrastructure.Context.Mappings;
 
 namespace UniHub.Infrastructure.Context
 {
@@ -16,24 +17,16 @@ namespace UniHub.Infrastructure.Context
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
         public DbSet<User> Users { get; set; } = null!;
+        public DbSet<Course> Courses { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(150);
-
-                entity.Property(e => e.ClerkId)
-                    .IsRequired()
-                    .HasMaxLength(50);
-            });
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserMappings).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(CourseMappings).Assembly);
 
             base.OnModelCreating(modelBuilder);
         }
+
 
         public void InitConnection(string connectionString)
         {
