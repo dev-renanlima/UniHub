@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using UniHub.API.Mapper;
 using UniHub.API.Middleware;
 using UniHub.Application.Services;
 using UniHub.Domain.Interfaces.Repositories;
@@ -16,6 +17,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddLogging();
+
+builder.Services.RegisterMaps();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("UniHubConnection")));

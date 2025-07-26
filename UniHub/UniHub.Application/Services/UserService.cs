@@ -22,14 +22,14 @@ namespace UniHub.Application.Services
             //_registerLog = registerLog;
         }
 
-        public async Task<CreateUserResponseDTO> CreateUser(UserDTO userDTO)
+        public async Task<CreateUserResponseDTO> Create(UserDTO userDTO)
         {
             try
             {
                 User user = userDTO.Adapt<User>();
 
-                await _unitOfWork.UserRepository.CreateAsync(user!);
-                _unitOfWork.Commit();
+                _unitOfWork.UserRepository.Create(user!);
+                _unitOfWork.Rollback();
 
                 CreateUserResponseDTO? createUserResponseDTO = user.Adapt<CreateUserResponseDTO>();
 

@@ -15,7 +15,7 @@ namespace UniHub.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public void CreateAsync(User user)
+        public void Create(User user)
         {
             using var command = _dbContext.CreateCommand();
 
@@ -69,11 +69,6 @@ namespace UniHub.Infrastructure.Repositories
         }
 
         public Task<User?> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task IUserRepository.CreateAsync(User user)
         {
             throw new NotImplementedException();
         }

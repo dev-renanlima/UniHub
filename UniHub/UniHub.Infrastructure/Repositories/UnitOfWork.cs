@@ -1,23 +1,41 @@
-﻿using UniHub.Domain.Interfaces.Repositories;
+﻿using Microsoft.Extensions.Configuration;
+using UniHub.Domain.Interfaces.Repositories;
 using UniHub.Infrastructure.Context;
 
 namespace UniHub.Infrastructure.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly ApplicationDbContext _dbContext;
+        private ApplicationDbContext _dbContext;
         private IUserRepository? _userRepository;
+        private string? _connectionString;
 
-        public UnitOfWork(ApplicationDbContext dbContext)
+        public UnitOfWork(ApplicationDbContext dbContext, IConfiguration configuration)
         {
             _dbContext = dbContext;
+            _connectionString = configuration.GetConnectionString("UniHubConnection");
         }
 
-        public IUserRepository UserRepository => _userRepository ??= new UserRepository(_dbContext);
-
-        public void BeginTransaction(string connectionString)
+        private void EnsureConnectionInitialized()
         {
-            _dbContext.InitConnection(connectionString);
+            if (_dbContext.CurrentConnection == null)
+            {
+                if (string.IsNullOrEmpty(_connectionString))
+                    throw new InvalidOperationException("A connection string não foi definida");
+
+                _dbContext.InitConnection(_connectionString);
+            }
+        }
+
+        public IUserRepository UserRepository
+        {
+            get
+            {
+                EnsureConnectionInitialized();
+
+                _userRepository ??= new UserRepository(_dbContext);
+                return _userRepository;
+            }
         }
 
         public void Commit()

@@ -5,6 +5,6 @@ namespace UniHub.API.Model.User.CreateUser
     public class CreateUserModel
     {
         [FromBody]
-        public CreateUserBody? CreateUserBody { get; set; }
+        public CreateUserBody? Body { get; set; }
     }
 }

@@ -25,7 +25,7 @@ namespace UniHub.API.Controllers
         {
             UserDTO userDTO = createUserModel.Adapt<UserDTO>();
 
-            CreateUserResponseDTO response = await _userService.CreateUser(userDTO);
+            CreateUserResponseDTO response = await _userService.Create(userDTO);
 
             return StatusCode(StatusCodes.Status200OK, response);
         }
