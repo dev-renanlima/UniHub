@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace UniHub.CrossCutting.Ioc
 {
-    internal class PipelineExtensions
+    public class PipelineExtensions
     {
+        
     }
 }

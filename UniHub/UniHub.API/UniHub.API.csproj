@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -7,6 +7,13 @@
     <UserSecretsId>c32a362d-2c29-4ba4-8be8-116f1514cdbb</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="NewFolder\**" />
+    <Content Remove="NewFolder\**" />
+    <EmbeddedResource Remove="NewFolder\**" />
+    <None Remove="NewFolder\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
@@ -21,22 +28,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UniHub.Domain\UniHub.Domain.csproj" />
-    <ProjectReference Include="..\UniHub.Infrastructure\UniHub.Infrastructure.csproj" />
+    <ProjectReference Include="..\UniHub.CrossCutting\UniHub.CrossCutting.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Resources\ApplicationMsg.Designer.cs">
+    <Compile Update="Resources\ApiMsg.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>ApplicationMsg.resx</DependentUpon>
+      <DependentUpon>ApiMsg.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Resources\ApplicationMsg.resx">
+    <EmbeddedResource Update="Resources\ApiMsg.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ApplicationMsg.Designer.cs</LastGenOutput>
+      <LastGenOutput>ApiMsg.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

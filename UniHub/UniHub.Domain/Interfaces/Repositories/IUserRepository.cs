@@ -6,7 +6,7 @@ namespace UniHub.Domain.Interfaces.Repositories
     {
         Task CreateAsync(User user);
         Task<User?> GetByIdAsync(int id);
-        Task<User?> GetByEmailAsync(string email);
+        Task<User?> GetByClerkIdAsync(string clerkId);
         Task<List<User>> GetAllAsync();
     }
 }

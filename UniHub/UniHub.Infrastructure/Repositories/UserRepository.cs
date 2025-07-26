@@ -23,8 +23,8 @@ namespace UniHub.Infrastructure.Repositories
             command.CommandType = CommandType.StoredProcedure;
             command.Transaction = _dbContext.CurrentTransaction;
 
+            command.Parameters.Add(_dbContext.CreateParameter(command, "@clerkId", user.ClerkId));
             command.Parameters.Add(_dbContext.CreateParameter(command, "@name", user.Name));
-            command.Parameters.Add(_dbContext.CreateParameter(command, "@email", user.Email));
             command.Parameters.Add(_dbContext.CreateParameter(command, "@creationDate", DateTime.UtcNow));
             command.Parameters.Add(_dbContext.CreateParameter(command, "@updateDate", DateTime.UtcNow));
 
@@ -36,14 +36,14 @@ namespace UniHub.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<User?> GetByEmailAsync(string email)
+        public Task<User?> GetByClerkIdAsync(string clerkId)
         {
             using var command = _dbContext.CreateCommand();
-            command.CommandText = "GetUserByEmail";
+            command.CommandText = "GetUserByClerkId";
             command.CommandType = CommandType.StoredProcedure;
             command.Transaction = _dbContext.CurrentTransaction;
 
-            command.Parameters.Add(_dbContext.CreateParameter(command, "@Email", email));
+            command.Parameters.Add(_dbContext.CreateParameter(command, "@clerkId", clerkId));
 
             using var reader = command.ExecuteReader();
 
@@ -54,8 +54,8 @@ namespace UniHub.Infrastructure.Repositories
                 user = new User
                 {
                     Id = reader["Id"] is DBNull ? null : (long?)reader["Id"],
+                    ClerkId = reader["ClerkId"] is DBNull ? null : (string)reader["ClerkId"],
                     Name = reader["Name"] is DBNull ? null : (string)reader["Name"],
-                    Email = reader["Email"] is DBNull ? null : (string)reader["Email"],
                     Role = Enum.Parse<UserRole>((string)reader["Role"]),
                     CreationDate = reader["CreationDate"] is DBNull ? null : (DateTime?)reader["CreationDate"],
                     UpdateDate = reader["UpdateDate"] is DBNull ? null : (DateTime?)reader["UpdateDate"],
@@ -77,12 +77,6 @@ namespace UniHub.Infrastructure.Repositories
         {
             throw new NotImplementedException();
         }
-
-        Task<User?> IUserRepository.GetByEmailAsync(string email)
-        {
-            throw new NotImplementedException();
-        }
-
 
         /*
         public void Update(Guid? id, PixOutStatus status)

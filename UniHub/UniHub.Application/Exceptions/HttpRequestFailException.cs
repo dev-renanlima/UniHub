@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Net;
+﻿using System.Net;
 
-namespace UniHub.API.Exceptions
+namespace UniHub.Application.Exceptions
 {
     public class HttpRequestFailException : Exception
     {

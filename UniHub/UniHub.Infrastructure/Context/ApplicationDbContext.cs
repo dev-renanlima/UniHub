@@ -27,9 +27,9 @@ namespace UniHub.Infrastructure.Context
                     .IsRequired()
                     .HasMaxLength(150);
 
-                entity.Property(e => e.Email)
+                entity.Property(e => e.ClerkId)
                     .IsRequired()
-                    .HasMaxLength(150);
+                    .HasMaxLength(50);
             });
 
             base.OnModelCreating(modelBuilder);

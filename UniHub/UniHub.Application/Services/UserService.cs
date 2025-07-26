@@ -1,8 +1,8 @@
 ﻿using Mapster;
 using Microsoft.Data.SqlClient;
 using System.Net;
-using UniHub.API.Exceptions;
-using UniHub.API.Resources;
+using UniHub.Application.Exceptions;
+using UniHub.Application.Resources;
 using UniHub.Domain.DTOs;
 using UniHub.Domain.DTOs.Responses.User;
 using UniHub.Domain.Entities;

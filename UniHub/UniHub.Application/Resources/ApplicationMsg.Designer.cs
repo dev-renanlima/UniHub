@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace UniHub.API.Resources {
+namespace UniHub.Application.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace UniHub.API.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("UniHub.API.Resources.ApplicationMsg", typeof(ApplicationMsg).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("UniHub.Application.Resources.ApplicationMsg", typeof(ApplicationMsg).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,15 +57,6 @@ namespace UniHub.API.Resources {
             }
             set {
                 resourceCulture = value;
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Houve um erro no sistema. Tente novamente mais tarde..
-        /// </summary>
-        public static string EXC0001 {
-            get {
-                return ResourceManager.GetString("EXC0001", resourceCulture);
             }
         }
         
