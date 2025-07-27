@@ -20,14 +20,15 @@ namespace UniHub.API.Mapper
             TypeAdapterConfig<CourseDTO, Course>
                     .NewConfig()
                     .Map(dest => dest.AdminId, src => src.AdminId)
-                    .Map(dest => dest.Name, src => src.Name) 
+                    .Map(dest => dest.Name, src => src.Name)
                     .Map(dest => dest.Code, src => src.Code);
 
             TypeAdapterConfig<Course, CreateCourseResponseDTO>
                     .NewConfig()
                     .Map(dest => dest.AdminId, src => src.AdminId)
                     .Map(dest => dest.Name, src => src.Name)
-                    .Map(dest => dest.Code, src => src.Code);
+                    .Map(dest => dest.Code, src => src.Code)
+                    .Map(dest => dest.Id, src => src.Id);
         }
     }
 }

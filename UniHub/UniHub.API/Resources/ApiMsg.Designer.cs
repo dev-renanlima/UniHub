@@ -68,5 +68,14 @@ namespace UniHub.API.Resources {
                 return ResourceManager.GetString("API0001", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to O campo {0} é obrigatório.
+        /// </summary>
+        public static string API0002 {
+            get {
+                return ResourceManager.GetString("API0002", resourceCulture);
+            }
+        }
     }
 }

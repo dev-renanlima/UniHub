@@ -26,13 +26,15 @@ namespace UniHub.API.Mapper
                     .NewConfig()
                     .Map(dest => dest.ClerkId, src => src.ClerkId)
                     .Map(dest => dest.Name, src => src.Name)
-                    .Map(dest => dest.Role, src => src.Role);
+                    .Map(dest => dest.Role, src => src.Role)
+                    .Map(dest => dest.Id, src => src.Id); 
 
             TypeAdapterConfig<User, GetUserResponseDTO>
                     .NewConfig()
                     .Map(dest => dest.ClerkId, src => src.ClerkId)
                     .Map(dest => dest.Name, src => src.Name)
-                    .Map(dest => dest.Role, src => src.Role);
+                    .Map(dest => dest.Role, src => src.Role)
+                    .Map(dest => dest.Id, src => src.Id);
         }
     }
 }

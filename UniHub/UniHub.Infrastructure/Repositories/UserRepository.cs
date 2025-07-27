@@ -15,7 +15,7 @@ namespace UniHub.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<long> CreateAsync(User user)
+        public async Task<User?> CreateAsync(User user)
         {
             using var command = _dbContext.CreateCommand();
 
@@ -29,7 +29,10 @@ namespace UniHub.Infrastructure.Repositories
             _dbContext.CreateParameter(command, "p_UpdateDate", DateTime.UtcNow);
 
             var result = await command.ExecuteScalarAsync();
-            return (long)result!;
+
+            user.SetIdentity((long)result!);
+
+            return user;
         } 
 
         public Task<List<User>> GetAllUsersAsync()

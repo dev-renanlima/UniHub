@@ -14,7 +14,7 @@ namespace UniHub.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<long> CreateAsync(Course course)
+        public async Task<Course?> CreateAsync(Course course)
         {
             using var command = _dbContext.CreateCommand();
 
@@ -28,7 +28,10 @@ namespace UniHub.Infrastructure.Repositories
             _dbContext.CreateParameter(command, "p_UpdateDate", DateTime.UtcNow);
 
             var result = await command.ExecuteScalarAsync();
-            return (long)result!;
+
+            course.SetIdentity((long)result!);
+
+            return course;
         } 
 
         public Task<List<Course>> GetAllAsync()
