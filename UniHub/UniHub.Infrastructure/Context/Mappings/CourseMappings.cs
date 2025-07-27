@@ -10,19 +10,10 @@ namespace UniHub.Infrastructure.Context.Mappings
         {
             entity.HasKey(e => e.Id);
 
-            entity.Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(150);
-
-            entity.Property(e => e.Code)
-                .HasMaxLength(10);
-
             entity.HasOne<User>()
                   .WithMany()
-                  .HasForeignKey("AdminId")
+                  .HasForeignKey("UserId")
                   .IsRequired(false);
-
-            entity.Ignore(e => e.Members);
         }
     }
 }

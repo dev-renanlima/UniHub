@@ -4,7 +4,7 @@ namespace UniHub.Domain.Entities;
 
 public class User : BaseEntity
 {
-    public string? ClerkId { get; set; }
+    public string? ExternalIdentifier { get; set; }
 
     public string? Name { get; set; }
 

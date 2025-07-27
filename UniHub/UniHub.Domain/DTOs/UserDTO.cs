@@ -4,7 +4,7 @@ namespace UniHub.Domain.DTOs
 {
     public class UserDTO
     {
-        public string? ClerkId { get; set; }
+        public string? ExternalIdentifier { get; set; }
 
         public string? Name { get; set; }
 

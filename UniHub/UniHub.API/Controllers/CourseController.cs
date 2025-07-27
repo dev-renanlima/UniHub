@@ -32,11 +32,11 @@ public class CourseController : ControllerBase
     }
 
     [HttpPost("/addMemberByCode")]
-    public async Task<IActionResult> AddMemberByCode(AddMemberByCodeModel createCourseModel)
+    public async Task<IActionResult> AddMemberByCode(AddMemberByCodeModel addMemberByCodeModel)
     {
-        CourseDTO courseDTO = createCourseModel.Adapt<CourseDTO>();
+        CourseMemberDTO courseMemberDTO = addMemberByCodeModel.Adapt<CourseMemberDTO>();
 
-        CreateCourseResponseDTO response = await _courseService.CreateAsync(courseDTO);
+        AddCourseMemberResponseDTO response = await _courseService.AddMemberByCode(courseMemberDTO);
 
         return StatusCode(StatusCodes.Status200OK, response);
     }

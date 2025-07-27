@@ -2,7 +2,9 @@
 
 public class CourseDTO
 {
-    public string? AdminId { get; set; }
+    public long? UserId { get; set; }
+
+    public string? UserIdentifier { get; set; }
 
     public string? Name { get; set; }
 

@@ -16,30 +16,28 @@ namespace UniHub.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserService _userService;
-        //private readonly IRegisterLog _registerLog;
 
-        public CourseService(IUnitOfWork unitOfWork, IUserService userService)//, IRegisterLog registerLog)
+        public CourseService(IUnitOfWork unitOfWork, IUserService userService)
         {
             _unitOfWork = unitOfWork;
             _userService = userService;
-            //_registerLog = registerLog;
         }
 
         public async Task<CreateCourseResponseDTO> CreateAsync(CourseDTO courseDTO)
         {
             try
             {
-                var course = courseDTO.Adapt<Course>();
-
-                var user = await _userService.GetUserByClerkIdAsync(course.AdminId!);
+                var user = await _userService.GetUserByExternalIdentifierAsync(courseDTO.UserIdentifier!);
 
                 if (user.Role != UserRole.ADMIN.ToString())
                     throw new HttpRequestFailException(nameof(ApplicationMsg.USR0003), ApplicationMsg.USR0003, HttpStatusCode.BadRequest);
 
+                var course = (courseDTO, user).Adapt<Course>();
+
                 await _unitOfWork.CourseRepository.CreateAsync(course!);
                 _unitOfWork.Commit();
 
-                CreateCourseResponseDTO? createCourseResponseDTO = course.Adapt<CreateCourseResponseDTO>();
+                CreateCourseResponseDTO createCourseResponseDTO = course.Adapt<CreateCourseResponseDTO>();
 
                 return createCourseResponseDTO;
             }
@@ -49,11 +47,44 @@ namespace UniHub.Application.Services
 
                 throw new HttpRequestFailException(nameof(ApplicationMsg.USR0001), ApplicationMsg.USR0001, HttpStatusCode.BadRequest);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 _unitOfWork.Rollback();
 
-                //_registerLog.RegisterExceptionLog(action: "CreateUser", details: null, ex);
+                throw;
+            }
+        }
+
+        public async Task<AddCourseMemberResponseDTO> AddMemberByCode(CourseMemberDTO courseMemberDTO)
+        {
+            try
+            {
+                var user = await _userService.GetUserByExternalIdentifierAsync(courseMemberDTO.ExternalIdentifier!);
+
+                if (user.Role != UserRole.MEMBER.ToString())
+                    throw new HttpRequestFailException(nameof(ApplicationMsg.USR0003), ApplicationMsg.USR0003, HttpStatusCode.BadRequest);
+
+                var course = await _unitOfWork.CourseRepository.GetCourseByCodeAsync(courseMemberDTO.Code!) ??
+                    throw new HttpRequestFailException(nameof(ApplicationMsg.CRS0001), string.Format(ApplicationMsg.CRS0001, courseMemberDTO.Code), HttpStatusCode.NotFound);
+
+                var courseMember = (course, user).Adapt<CourseMember>();
+
+                await _unitOfWork.CourseRepository.CreateCourseMemberAsync(courseMember!);
+                _unitOfWork.Commit();
+
+                AddCourseMemberResponseDTO? addCourseMemberResponseDTO = courseMember.Adapt<AddCourseMemberResponseDTO>();
+
+                return addCourseMemberResponseDTO;
+            }
+            catch (PostgresException ex) when (ex.SqlState == PostgresErrorCodes.UniqueViolation)
+            {
+                _unitOfWork.Rollback();
+
+                throw new HttpRequestFailException(nameof(ApplicationMsg.USR0004), ApplicationMsg.USR0004, HttpStatusCode.BadRequest);
+            }
+            catch (Exception)
+            {
+                _unitOfWork.Rollback();
 
                 throw;
             }

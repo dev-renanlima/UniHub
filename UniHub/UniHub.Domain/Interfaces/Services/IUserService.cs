@@ -6,6 +6,6 @@ namespace UniHub.Domain.Interfaces.Services
     public interface IUserService
     {
         Task<CreateUserResponseDTO> CreateAsync(UserDTO userDTO);
-        Task<GetUserResponseDTO> GetUserByClerkIdAsync(string clerkId);
+        Task<GetUserResponseDTO> GetUserByExternalIdentifierAsync(string externalIdentifier);
     }
 }

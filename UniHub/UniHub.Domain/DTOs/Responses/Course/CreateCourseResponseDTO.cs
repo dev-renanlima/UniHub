@@ -3,7 +3,7 @@
 public record CreateCourseResponseDTO
 (
     long? Id,
-    string? AdminId,
+    string? UserIdentifier,
     string? Name,
     string? Code
 );

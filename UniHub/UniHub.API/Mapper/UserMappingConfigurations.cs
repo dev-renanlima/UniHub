@@ -12,29 +12,18 @@ namespace UniHub.API.Mapper
         {
             TypeAdapterConfig<CreateUserModel, UserDTO>
                     .NewConfig()
-                    .Map(dest => dest.ClerkId, src => src.Body!.ClerkId)
+                    .Map(dest => dest.ExternalIdentifier, src => src.Body!.ExternalIdentifier)
                     .Map(dest => dest.Name, src => src.Body!.Name)
                     .Map(dest => dest.Role, src => src.Body!.Role);
 
             TypeAdapterConfig<UserDTO, User>
-                    .NewConfig()
-                    .Map(dest => dest.ClerkId, src => src.ClerkId)
-                    .Map(dest => dest.Name, src => src.Name) 
-                    .Map(dest => dest.Role, src => src.Role);
+                    .NewConfig();
 
             TypeAdapterConfig<User, CreateUserResponseDTO>
-                    .NewConfig()
-                    .Map(dest => dest.ClerkId, src => src.ClerkId)
-                    .Map(dest => dest.Name, src => src.Name)
-                    .Map(dest => dest.Role, src => src.Role)
-                    .Map(dest => dest.Id, src => src.Id); 
+                    .NewConfig();
 
             TypeAdapterConfig<User, GetUserResponseDTO>
-                    .NewConfig()
-                    .Map(dest => dest.ClerkId, src => src.ClerkId)
-                    .Map(dest => dest.Name, src => src.Name)
-                    .Map(dest => dest.Role, src => src.Role)
-                    .Map(dest => dest.Id, src => src.Id);
+                    .NewConfig();
         }
     }
 }

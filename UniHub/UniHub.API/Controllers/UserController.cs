@@ -30,10 +30,10 @@ public class UserController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, response);
     }
 
-    [HttpGet("/getUserByClerkId/{clerkId}")]
-    public async Task<IActionResult> GetUserByClerkId([FromRoute] string clerkId)
+    [HttpGet("/getUserByExternalIdentifier/{externalIdentifier}")]
+    public async Task<IActionResult> GetUserByClerkId([FromRoute] string externalIdentifier)
     {
-        GetUserResponseDTO? response = await _userService.GetUserByClerkIdAsync(clerkId);
+        GetUserResponseDTO? response = await _userService.GetUserByExternalIdentifierAsync(externalIdentifier);
 
         return StatusCode(StatusCodes.Status200OK, response);
     }

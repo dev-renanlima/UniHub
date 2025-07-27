@@ -2,12 +2,12 @@
 
 public class Course : BaseEntity
 {
-    public string? AdminId { get; set; }  
-    public User Admin { get; set; } = null!;
+    public long? UserId { get; set; }  
+    public User User { get; set; } = null!;
 
     public string? Name { get; set; }
 
     public string? Code { get; set; }
 
-    public List<CourseMember> Members { get; set; } = new();
+    public List<CourseMember> CourseMembers { get; set; } = new();
 }

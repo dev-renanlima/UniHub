@@ -3,7 +3,7 @@
 public record CreateUserResponseDTO
 (
     long? Id,
-    string? ClerkId,
+    string? ExternalIdentifier,
     string? Name,
     string? Role
 );

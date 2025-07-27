@@ -9,13 +9,5 @@ public class UserMappings : IEntityTypeConfiguration<User>
     public void Configure(EntityTypeBuilder<User> entity)
     {
         entity.HasKey(e => e.Id);
-
-        entity.Property(e => e.Name)
-            .IsRequired()
-            .HasMaxLength(150);
-
-        entity.Property(e => e.ClerkId)
-            .IsRequired()
-            .HasMaxLength(50);
     }
 }

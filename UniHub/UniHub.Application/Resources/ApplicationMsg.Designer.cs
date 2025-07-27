@@ -61,7 +61,16 @@ namespace UniHub.Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Já existe um usuário com os parâmetros informados..
+        ///   Looks up a localized string similar to Não foi encontrado nenhum curso com o código informado: {0}.
+        /// </summary>
+        public static string CRS0001 {
+            get {
+                return ResourceManager.GetString("CRS0001", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Já existe um usuário com os parâmetros informados.
         /// </summary>
         public static string USR0001 {
             get {
@@ -70,7 +79,7 @@ namespace UniHub.Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Não foi encontrado nenhum usuário com o Id informado: {0}.
+        ///   Looks up a localized string similar to Não foi encontrado nenhum usuário com o identificador informado: {0}.
         /// </summary>
         public static string USR0002 {
             get {
@@ -79,11 +88,20 @@ namespace UniHub.Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to O usuário não pode realizar essa ação.
+        ///   Looks up a localized string similar to O usuário não pode realizar esta ação.
         /// </summary>
         public static string USR0003 {
             get {
                 return ResourceManager.GetString("USR0003", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to O usuário já é um membro do curso solicitado.
+        /// </summary>
+        public static string USR0004 {
+            get {
+                return ResourceManager.GetString("USR0004", resourceCulture);
             }
         }
     }

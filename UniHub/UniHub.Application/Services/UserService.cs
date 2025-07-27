@@ -14,12 +14,10 @@ namespace UniHub.Application.Services
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
-        //private readonly IRegisterLog _registerLog;
 
-        public UserService(IUnitOfWork unitOfWork)//, IRegisterLog registerLog)
+        public UserService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            //_registerLog = registerLog;
         }
 
         public async Task<CreateUserResponseDTO> CreateAsync(UserDTO userDTO)
@@ -41,22 +39,20 @@ namespace UniHub.Application.Services
 
                 throw new HttpRequestFailException(nameof(ApplicationMsg.USR0001), ApplicationMsg.USR0001, HttpStatusCode.BadRequest);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 _unitOfWork.Rollback();
-
-                //_registerLog.RegisterExceptionLog(action: "CreateUser", details: null, ex);
 
                 throw;
             }
         }
 
-        public async Task<GetUserResponseDTO> GetUserByClerkIdAsync(string clerkId)
+        public async Task<GetUserResponseDTO> GetUserByExternalIdentifierAsync(string externalIdentifier)
         {
             try
             {
-                User? user = await _unitOfWork.UserRepository.GetUserByClerkIdAsync(clerkId)
-                    ?? throw new HttpRequestFailException(nameof(ApplicationMsg.USR0002), string.Format(ApplicationMsg.USR0002, clerkId), HttpStatusCode.NotFound);
+                User? user = await _unitOfWork.UserRepository.GetUserByExternalIdentifierAsync(externalIdentifier)
+                    ?? throw new HttpRequestFailException(nameof(ApplicationMsg.USR0002), string.Format(ApplicationMsg.USR0002, externalIdentifier), HttpStatusCode.NotFound);
 
                 _unitOfWork.Commit();
 
@@ -64,11 +60,9 @@ namespace UniHub.Application.Services
 
                 return getUserResponseDTO;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 _unitOfWork.Rollback();
-
-                //_registerLog.RegisterExceptionLog(action: "CreateUser", details: null, ex);
 
                 throw;
             }

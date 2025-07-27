@@ -4,7 +4,7 @@ namespace UniHub.API.Model.User.CreateUser;
 
 public class CreateUserBody
 {
-    public string? ClerkId { get; set; }
+    public string? ExternalIdentifier { get; set; }
 
     public string? Name { get; set; }
 

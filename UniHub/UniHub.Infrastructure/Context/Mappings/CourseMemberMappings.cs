@@ -8,18 +8,15 @@ namespace UniHub.Infrastructure.Context.Mappings
     {
         public void Configure(EntityTypeBuilder<CourseMember> builder)
         {
-            builder.HasKey(cm => new { cm.CourseId, cm.MemberId });
+            builder.HasKey(cm => new { cm.CourseId, cm.UserId });
 
             builder.HasOne(cm => cm.Course)
-                   .WithMany(c => c.Members)
+                   .WithMany(c => c.CourseMembers)
                    .HasForeignKey(cm => cm.CourseId);
 
-            builder.HasOne(cm => cm.Member)
+            builder.HasOne(cm => cm.User)
                    .WithMany(u => u.Courses)
-                   .HasForeignKey(cm => cm.MemberId);
-
-            builder.Property(cm => cm.EnrollmentDate)
-                   .IsRequired();
+                   .HasForeignKey(cm => cm.UserId);
         }
     }
 }
