@@ -36,7 +36,15 @@ public class CourseController : ControllerBase
     {
         CourseMemberDTO courseMemberDTO = addMemberByCodeModel.Adapt<CourseMemberDTO>();
 
-        AddCourseMemberResponseDTO response = await _courseService.AddMemberByCode(courseMemberDTO);
+        AddCourseMemberResponseDTO response = await _courseService.AddMemberByCodeAsync(courseMemberDTO);
+
+        return StatusCode(StatusCodes.Status200OK, response);
+    }
+
+    [HttpGet("/getCoursesByUser/{externalIdentifier}")]
+    public async Task<IActionResult> GetCoursesByUser([FromRoute] string externalIdentifier)
+    {
+        GetCoursesByUserResponseDTO? response = await _courseService.GetCoursesByUserAsync(externalIdentifier);
 
         return StatusCode(StatusCodes.Status200OK, response);
     }

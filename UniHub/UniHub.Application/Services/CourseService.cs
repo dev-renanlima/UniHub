@@ -55,7 +55,7 @@ namespace UniHub.Application.Services
             }
         }
 
-        public async Task<AddCourseMemberResponseDTO> AddMemberByCode(CourseMemberDTO courseMemberDTO)
+        public async Task<AddCourseMemberResponseDTO> AddMemberByCodeAsync(CourseMemberDTO courseMemberDTO)
         {
             try
             {
@@ -81,6 +81,28 @@ namespace UniHub.Application.Services
                 _unitOfWork.Rollback();
 
                 throw new HttpRequestFailException(nameof(ApplicationMsg.USR0004), ApplicationMsg.USR0004, HttpStatusCode.BadRequest);
+            }
+            catch (Exception)
+            {
+                _unitOfWork.Rollback();
+
+                throw;
+            }
+        }
+
+        public async Task<GetCoursesByUserResponseDTO?> GetCoursesByUserAsync(string externalIdentifier)
+        {
+            try
+            {
+                var user = await _userService.GetUserByExternalIdentifierAsync(externalIdentifier!);
+
+                var courses = await _unitOfWork.CourseRepository.GetCoursesByUserAsync(user.Id!);
+
+                _unitOfWork.Commit();
+
+                GetCoursesByUserResponseDTO getCoursesByUserResponseDTO = (user, courses).Adapt<GetCoursesByUserResponseDTO>();
+
+                return getCoursesByUserResponseDTO;
             }
             catch (Exception)
             {

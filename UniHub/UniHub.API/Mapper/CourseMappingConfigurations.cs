@@ -53,6 +53,17 @@ namespace UniHub.API.Mapper
                     .Map(dest => dest.CourseName, src => src.Course.Name)
                     .Map(dest => dest.EnrollmentDate, src => src.EnrollmentDate);
             #endregion
+
+            #region Course - GetCoursesByUser
+            TypeAdapterConfig<Course, CourseByUserDTO>
+                .NewConfig()
+                    .Map(dest => dest.CourseId, src => src.Id!);
+
+            TypeAdapterConfig<(GetUserResponseDTO User, List<Course?> Courses), GetCoursesByUserResponseDTO>
+                .NewConfig()
+                    .Map(dest => dest.UserIdentifier, src => src.User.ExternalIdentifier)
+                    .Map(dest => dest.Courses, src => src.Courses);
+            #endregion
         }
     }
 }

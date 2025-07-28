@@ -31,7 +31,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("/getUserByExternalIdentifier/{externalIdentifier}")]
-    public async Task<IActionResult> GetUserByClerkId([FromRoute] string externalIdentifier)
+    public async Task<IActionResult> GetUserByExternalIdentifier([FromRoute] string externalIdentifier)
     {
         GetUserResponseDTO? response = await _userService.GetUserByExternalIdentifierAsync(externalIdentifier);
 
