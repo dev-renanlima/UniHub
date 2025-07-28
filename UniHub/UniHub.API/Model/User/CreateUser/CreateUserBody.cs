@@ -1,13 +1,12 @@
 ﻿using UniHub.Domain.Enums;
 
-namespace UniHub.API.Model.User.CreateUser
+namespace UniHub.API.Model.User.CreateUser;
+
+public class CreateUserBody
 {
-    public class CreateUserBody
-    {
-        public string? ClerkId { get; set; }
+    public string? ExternalIdentifier { get; set; }
 
-        public string? Name { get; set; }
+    public string? Name { get; set; }
 
-        public int? Role { get; set; }
-    }
+    public int? Role { get; set; }
 }

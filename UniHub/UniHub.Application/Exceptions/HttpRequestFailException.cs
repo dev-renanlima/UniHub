@@ -14,12 +14,6 @@ namespace UniHub.Application.Exceptions
 
         public string? CorrelationId { get; }
 
-        public HttpRequestFailException(string message, HttpStatusCode statusCode)
-            : base(message)
-        {
-            StatusCode = statusCode;
-        }
-
         public HttpRequestFailException(Exception ex, string data, HttpStatusCode statusCode)
         {
             RegularException = ex;
@@ -27,11 +21,11 @@ namespace UniHub.Application.Exceptions
             StatusCode = statusCode;
         }
 
-        public HttpRequestFailException(string message, HttpStatusCode statusCode, string? correlationId = null)
+        public HttpRequestFailException(string errorCode, string message, HttpStatusCode statusCode, string? correlationId = null)
             : base(message)
         {
+            ErrorCode = errorCode;
             StatusCode = statusCode;
-            ErrorCode = statusCode.ToString();
             CorrelationId = correlationId ?? Guid.NewGuid().ToString("N");
         }
     }

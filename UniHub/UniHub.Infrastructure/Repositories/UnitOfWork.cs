@@ -8,6 +8,7 @@ namespace UniHub.Infrastructure.Repositories
     {
         private ApplicationDbContext _dbContext;
         private IUserRepository? _userRepository;
+        private ICourseRepository? _courseRepository;
         private string? _connectionString;
 
         public UnitOfWork(ApplicationDbContext dbContext, IConfiguration configuration)
@@ -38,6 +39,17 @@ namespace UniHub.Infrastructure.Repositories
             }
         }
 
+        public ICourseRepository CourseRepository 
+        {
+            get
+            {
+                EnsureConnectionInitialized();
+
+                _courseRepository ??= new CourseRepository(_dbContext);
+                return _courseRepository;
+            }
+        }
+
         public void Commit()
         {
             _dbContext.CommitTransaction();
@@ -53,6 +65,7 @@ namespace UniHub.Infrastructure.Repositories
         private void ClearRepositories()
         {
             _userRepository = null;
+            _courseRepository = null;
         }
     }
 }

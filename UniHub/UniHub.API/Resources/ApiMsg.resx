@@ -120,4 +120,7 @@
   <data name="API0001" xml:space="preserve">
     <value>Houve um erro no sistema. Tente novamente mais tarde.</value>
   </data>
+  <data name="API0002" xml:space="preserve">
+    <value>O campo {0} é obrigatório</value>
+  </data>
 </root>

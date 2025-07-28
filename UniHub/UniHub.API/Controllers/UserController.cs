@@ -1,33 +1,40 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Asp.Versioning;
-using UniHub.Domain.Interfaces.Services;
+﻿using Asp.Versioning;
+using Mapster;
+using Microsoft.AspNetCore.Mvc;
 using UniHub.API.Model.User.CreateUser;
 using UniHub.Domain.DTOs;
-using Mapster;
 using UniHub.Domain.DTOs.Responses.User;
+using UniHub.Domain.Interfaces.Services;
 
-namespace UniHub.API.Controllers
+namespace UniHub.API.Controllers;
+
+[ApiVersion(1.0)]
+[ApiController]
+[Route("unihub/api/v{version:apiVersion}/user")]
+public class UserController : ControllerBase
 {
-    [ApiVersion(1.0)]
-    [ApiController]
-    [Route("unihub/api/v{version:apiVersion}/user")]
-    public class UserController : ControllerBase
+    private readonly IUserService _userService;
+
+    public UserController(IUserService userService)
     {
-        private readonly IUserService _userService;
+        _userService = userService;
+    }
 
-        public UserController(IUserService userService)
-        {
-            _userService = userService;
-        }
+    [HttpPost("/createUser")]
+    public async Task<IActionResult> CreateUser(CreateUserModel createUserModel)
+    {
+        UserDTO userDTO = createUserModel.Adapt<UserDTO>();
 
-        [HttpPost("/create")]
-        public async Task<IActionResult> CreateUser(CreateUserModel createUserModel)
-        {
-            UserDTO userDTO = createUserModel.Adapt<UserDTO>();
+        CreateUserResponseDTO response = await _userService.CreateAsync(userDTO);
 
-            CreateUserResponseDTO response = await _userService.Create(userDTO);
+        return StatusCode(StatusCodes.Status201Created, response);
+    }
 
-            return StatusCode(StatusCodes.Status200OK, response);
-        }
+    [HttpGet("/getUserByExternalIdentifier/{externalIdentifier}")]
+    public async Task<IActionResult> GetUserByExternalIdentifier([FromRoute] string externalIdentifier)
+    {
+        GetUserResponseDTO? response = await _userService.GetUserByExternalIdentifierAsync(externalIdentifier);
+
+        return StatusCode(StatusCodes.Status200OK, response);
     }
 }

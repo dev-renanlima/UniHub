@@ -1,5 +1,5 @@
 ﻿using Mapster;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 using System.Net;
 using UniHub.Application.Exceptions;
 using UniHub.Application.Resources;
@@ -14,38 +14,55 @@ namespace UniHub.Application.Services
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
-        //private readonly IRegisterLog _registerLog;
 
-        public UserService(IUnitOfWork unitOfWork)//, IRegisterLog registerLog)
+        public UserService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            //_registerLog = registerLog;
         }
 
-        public async Task<CreateUserResponseDTO> Create(UserDTO userDTO)
+        public async Task<CreateUserResponseDTO> CreateAsync(UserDTO userDTO)
         {
             try
             {
                 User user = userDTO.Adapt<User>();
 
-                _unitOfWork.UserRepository.Create(user!);
-                _unitOfWork.Rollback();
+                await _unitOfWork.UserRepository.CreateAsync(user!);
+                _unitOfWork.Commit();
 
                 CreateUserResponseDTO? createUserResponseDTO = user.Adapt<CreateUserResponseDTO>();
 
                 return createUserResponseDTO;
             }
-            catch (SqlException ex) when (ex.Number is 2601 or 2627)
+            catch (PostgresException ex) when (ex.SqlState == PostgresErrorCodes.UniqueViolation)
             {
                 _unitOfWork.Rollback();
 
-                throw new HttpRequestFailException(ApplicationMsg.USR0001, HttpStatusCode.BadRequest);
+                throw new HttpRequestFailException(nameof(ApplicationMsg.USR0001), ApplicationMsg.USR0001, HttpStatusCode.BadRequest);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 _unitOfWork.Rollback();
 
-                //_registerLog.RegisterExceptionLog(action: "CreateUser", details: null, ex);
+                throw;
+            }
+        }
+
+        public async Task<GetUserResponseDTO> GetUserByExternalIdentifierAsync(string externalIdentifier)
+        {
+            try
+            {
+                User? user = await _unitOfWork.UserRepository.GetUserByExternalIdentifierAsync(externalIdentifier)
+                    ?? throw new HttpRequestFailException(nameof(ApplicationMsg.USR0002), string.Format(ApplicationMsg.USR0002, externalIdentifier), HttpStatusCode.NotFound);
+
+                _unitOfWork.Commit();
+
+                GetUserResponseDTO? getUserResponseDTO = user.Adapt<GetUserResponseDTO>();
+
+                return getUserResponseDTO;
+            }
+            catch (Exception)
+            {
+                _unitOfWork.Rollback();
 
                 throw;
             }

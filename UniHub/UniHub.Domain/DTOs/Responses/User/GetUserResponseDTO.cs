@@ -1,6 +1,6 @@
 ﻿namespace UniHub.Domain.DTOs.Responses.User;
 
-public record CreateUserResponseDTO
+public record GetUserResponseDTO
 (
     long? Id,
     string? ExternalIdentifier,
