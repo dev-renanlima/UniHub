@@ -39,7 +39,7 @@ namespace UniHub.Application.Services
 
                 assignment = await _unitOfWork.AssignmentRepository.CreateAsync(assignment!);
 
-                var assignmentAttachmentsDTO = (assignment, user).Adapt<List<AssignmentAttachmentDTO>>();
+                var assignmentAttachmentsDTO = assignment.Adapt<List<AssignmentAttachmentDTO>>();
 
                 await CreateAssignmentAttachmentsAsync(assignmentAttachmentsDTO);
 

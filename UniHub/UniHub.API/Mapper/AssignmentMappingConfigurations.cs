@@ -36,7 +36,14 @@ public static class AssignmentMappingConfigurations
                 .Map(dest => dest.Title, src => src.Assignment.Title)
                 .Map(dest => dest.Description, src => src.Assignment.Description)
                 .Map(dest => dest.ExpirationDate, src => src.Assignment.ExpirationDate)
-                .Map(dest => dest.AssignmentAttachments, src => src.Assignment.AssignmentAttachments);
+                .Map(dest => dest.AssignmentAttachments, src =>
+                    src.Assignment.AssignmentAttachments!.Select(attachment => new AssignmentAttachmentDTO
+                    {
+                        Url = attachment.Url,
+                        Type = src.User.Role == UserRole.Admin.ToString()
+                        ? AssignmentAttachmentType.CreatedByTeacher
+                        : AssignmentAttachmentType.SubmittedByStudent
+                    }).ToList());
 
         #region AssignmentAttachment - Create
         TypeAdapterConfig<AttachmentDTO, AssignmentAttachmentDTO>
@@ -51,16 +58,15 @@ public static class AssignmentMappingConfigurations
                 .Map(dest => dest.ExpirationDate, src => src.ExpirationDate)
                 .Map(dest => dest.AssignmentAttachments, src => src.AssignmentAttachments);
 
-        TypeAdapterConfig<(AssignmentDTO Assignment, GetUserResponseDTO User), List<AssignmentAttachmentDTO>>
+        TypeAdapterConfig<Assignment, List<AssignmentAttachmentDTO>>
             .NewConfig()
             .MapWith(src =>
-                src.Assignment.AssignmentAttachments!.Select(attachment => new AssignmentAttachmentDTO
+                src.AssignmentAttachments!.Select(attachment => new AssignmentAttachmentDTO
                 {
-                    AssignmentId = src.Assignment.AssignmentId,
+                    AssignmentId = src.Id,
+                    UserId = src.UserId,
                     Url = attachment.Url,
-                    Type = src.User.Role == UserRole.Admin.ToString()
-                        ? AssignmentAttachmentType.CreatedByTeacher
-                        : AssignmentAttachmentType.SubmittedByStudent
+                    Type = attachment.Type
                 }).ToList()
             );
 
