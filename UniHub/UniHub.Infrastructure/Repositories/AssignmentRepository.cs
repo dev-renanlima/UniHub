@@ -18,10 +18,11 @@ namespace UniHub.Infrastructure.Repositories
         {
             using var command = _dbContext.CreateCommand();
 
-            command.CommandText = "SELECT public.\"InsertAssignment\"(@p_CourseId, @p_Title, @p_Description, @p_ExpirationDate, @p_CreationDate, @p_UpdateDate)";
+            command.CommandText = "SELECT public.\"InsertAssignment\"(@p_CourseId, @p_UserId, @p_Title, @p_Description, @p_ExpirationDate, @p_CreationDate, @p_UpdateDate)";
             command.CommandType = CommandType.Text;
 
             _dbContext.CreateParameter(command, "p_CourseId", assignment.CourseId);
+            _dbContext.CreateParameter(command, "p_UserId", assignment.UserId);
             _dbContext.CreateParameter(command, "p_Title", assignment.Title);
             _dbContext.CreateParameter(command, "p_Description", assignment.Description);
             _dbContext.CreateParameter(command, "p_ExpirationDate", assignment.ExpirationDate);
@@ -39,10 +40,11 @@ namespace UniHub.Infrastructure.Repositories
         {
             using var command = _dbContext.CreateCommand();
 
-            command.CommandText = "SELECT public.\"InsertAssignmentAttachment\"(@p_AssignmentId, @p_Url, @p_Type, @p_CreationDate, @p_UpdateDate)";
+            command.CommandText = "SELECT public.\"InsertAssignmentAttachment\"(@p_AssignmentId, @p_UserId, @p_Url, @p_Type, @p_CreationDate, @p_UpdateDate)";
             command.CommandType = CommandType.Text;
 
             _dbContext.CreateParameter(command, "p_AssignmentId", assignmentAttachment.AssignmentId);
+            _dbContext.CreateParameter(command, "p_UserId", assignmentAttachment.UserId);
             _dbContext.CreateParameter(command, "p_Url", assignmentAttachment.Url);
             _dbContext.CreateParameter(command, "p_Type", assignmentAttachment.Type.ToString());
             _dbContext.CreateParameter(command, "p_CreationDate", DateTime.UtcNow);

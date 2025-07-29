@@ -1,4 +1,7 @@
 ﻿using Mapster;
+using System.Net;
+using UniHub.Application.Exceptions;
+using UniHub.Application.Resources;
 using UniHub.Domain.DTOs;
 using UniHub.Domain.DTOs.Responses.Assignment;
 using UniHub.Domain.Entities;
@@ -12,31 +15,33 @@ namespace UniHub.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseService _courseService;
+        private readonly IUserService _userService;
 
-        public AssignmentService(IUnitOfWork unitOfWork, ICourseService courseService)
+        public AssignmentService(IUnitOfWork unitOfWork, ICourseService courseService, IUserService userService)
         {
             _unitOfWork = unitOfWork;
             _courseService = courseService;
+            _userService = userService;
         }
 
         public async Task<CreateAssignmentResponseDTO?> CreateAsync(AssignmentDTO assignmentDTO)
         {
             try
             {
+                var user = await _userService.GetUserByExternalIdentifierAsync(assignmentDTO.UserIdentification!);
+
+                if (user.Role != UserRole.Admin.ToString())
+                    throw new HttpRequestFailException(nameof(ApplicationMsg.USR0003), ApplicationMsg.USR0003, HttpStatusCode.BadRequest);
+
                 var course = await _courseService.GetCourseByCodeAsync(assignmentDTO.CourseCode!);
 
-                var assignment = (course, assignmentDTO).Adapt<Assignment>();
+                var assignment = (course, user, assignmentDTO).Adapt<Assignment>();
 
-                await _unitOfWork.AssignmentRepository.CreateAsync(assignment!);
+                assignment = await _unitOfWork.AssignmentRepository.CreateAsync(assignment!);
 
-                if (assignmentDTO.AssignmentAttachments is not null)
-                {
-                    foreach (var attachment in assignmentDTO.AssignmentAttachments)
-                    {
-                        attachment.AssignmentId = assignment.Id;
-                        await CreateAssignmentAttachmentAsync(attachment, AssignmentAttachmentType.CreatedByTeacher);
-                    }
-                }
+                var assignmentAttachmentsDTO = (assignment, user).Adapt<List<AssignmentAttachmentDTO>>();
+
+                await CreateAssignmentAttachmentsAsync(assignmentAttachmentsDTO);
 
                 // Create Notification
 
@@ -54,13 +59,12 @@ namespace UniHub.Application.Services
             }
         }
 
-        public async Task CreateAssignmentAttachmentAsync(AssignmentAttachmentDTO assignmentAttachmentDTO, AssignmentAttachmentType attachmentType)
+        public async Task CreateAssignmentAttachmentsAsync(List<AssignmentAttachmentDTO> assignmentAttachmentsDTO)
         {
-            var assignmentAttachment = assignmentAttachmentDTO.Adapt<AssignmentAttachment>();
+            var assignmentAttachments = assignmentAttachmentsDTO.Adapt<List<AssignmentAttachment>>();
 
-            assignmentAttachment.Type = attachmentType; // TEMP
-
-            await _unitOfWork.AssignmentRepository.CreateAssignmentAttachmentAsync(assignmentAttachment!);
+            foreach (var attachment in assignmentAttachments)
+                await _unitOfWork.AssignmentRepository.CreateAssignmentAttachmentAsync(attachment);
         }
     }
 }

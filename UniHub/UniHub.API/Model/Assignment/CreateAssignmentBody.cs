@@ -4,6 +4,8 @@ namespace UniHub.API.Model.Assignment
 {
     public class CreateAssignmentBody
     {
+        public string? UserIdentification { get; set; }
+
         public string? CourseCode { get; set; }
 
         public string? Title { get; set; }
