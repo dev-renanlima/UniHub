@@ -13,7 +13,6 @@ public static class PipelineExtensions
 {
     public static IServiceCollection AddUniHubContext(this IServiceCollection services, IConfiguration configuration)
     {
-        // DbContext
         services.AddDbContext<ApplicationDbContext>(options =>
             //options.UseSqlServer(configuration.GetConnectionString("UniHubConnection")));
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
@@ -23,19 +22,19 @@ public static class PipelineExtensions
 
     public static IServiceCollection AddUniHubRepositories(this IServiceCollection services)
     {
-        // Unit of Work e Repositórios
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ICourseRepository, CourseRepository>();
+        services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 
         return services;
     }
 
     public static IServiceCollection AddUniHubServices(this IServiceCollection services)
     {        
-        // Serviços de domínio
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<ICourseService, CourseService>();
+        services.AddScoped<IAssignmentService, AssignmentService>();
 
         return services;
     }

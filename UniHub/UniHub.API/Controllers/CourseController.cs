@@ -41,6 +41,14 @@ public class CourseController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, response);
     }
 
+    [HttpGet("/getCourseByCode/{code}")]
+    public async Task<IActionResult> GetCourseByCode([FromRoute] string code)
+    {
+        GetCourseByCodeResponseDTO? response = await _courseService.GetCourseByCodeAsync(code);
+
+        return StatusCode(StatusCodes.Status200OK, response);
+    }
+
     [HttpGet("/getCoursesByUser/{externalIdentifier}")]
     public async Task<IActionResult> GetCoursesByUser([FromRoute] string externalIdentifier)
     {

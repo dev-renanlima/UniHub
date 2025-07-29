@@ -29,7 +29,7 @@ namespace UniHub.Application.Services
             {
                 var user = await _userService.GetUserByExternalIdentifierAsync(courseDTO.UserIdentifier!);
 
-                if (user.Role != UserRole.ADMIN.ToString())
+                if (user.Role != UserRole.Admin.ToString())
                     throw new HttpRequestFailException(nameof(ApplicationMsg.USR0003), ApplicationMsg.USR0003, HttpStatusCode.BadRequest);
 
                 var course = (courseDTO, user).Adapt<Course>();
@@ -55,17 +55,43 @@ namespace UniHub.Application.Services
             }
         }
 
+        public async Task<GetCourseByCodeResponseDTO?> GetCourseByCodeAsync(string code)
+        {
+            try
+            {
+                var course = await _unitOfWork.CourseRepository.GetCourseByCodeAsync(code) ??
+                    throw new HttpRequestFailException(nameof(ApplicationMsg.CRS0001), string.Format(ApplicationMsg.CRS0001, code), HttpStatusCode.NotFound);
+
+                _unitOfWork.Commit();
+
+                GetCourseByCodeResponseDTO? getCourseByCodeResponseDTO = course.Adapt<GetCourseByCodeResponseDTO>();
+
+                return getCourseByCodeResponseDTO;
+            }
+            catch (PostgresException ex) when (ex.SqlState == PostgresErrorCodes.UniqueViolation)
+            {
+                _unitOfWork.Rollback();
+
+                throw new HttpRequestFailException(nameof(ApplicationMsg.USR0004), ApplicationMsg.USR0004, HttpStatusCode.BadRequest);
+            }
+            catch (Exception)
+            {
+                _unitOfWork.Rollback();
+
+                throw;
+            }
+        }
+
         public async Task<AddCourseMemberResponseDTO> AddMemberByCodeAsync(CourseMemberDTO courseMemberDTO)
         {
             try
             {
                 var user = await _userService.GetUserByExternalIdentifierAsync(courseMemberDTO.ExternalIdentifier!);
 
-                if (user.Role != UserRole.MEMBER.ToString())
+                if (user.Role != UserRole.Member.ToString())
                     throw new HttpRequestFailException(nameof(ApplicationMsg.USR0003), ApplicationMsg.USR0003, HttpStatusCode.BadRequest);
 
-                var course = await _unitOfWork.CourseRepository.GetCourseByCodeAsync(courseMemberDTO.Code!) ??
-                    throw new HttpRequestFailException(nameof(ApplicationMsg.CRS0001), string.Format(ApplicationMsg.CRS0001, courseMemberDTO.Code), HttpStatusCode.NotFound);
+                var course = await GetCourseByCodeAsync(courseMemberDTO.Code!);
 
                 var courseMember = (course, user).Adapt<CourseMember>();
 

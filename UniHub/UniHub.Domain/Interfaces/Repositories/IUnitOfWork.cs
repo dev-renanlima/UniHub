@@ -6,6 +6,12 @@ public interface IUnitOfWork
 
     ICourseRepository CourseRepository { get; }
 
+    IAssignmentRepository AssignmentRepository { get; }
+
+    INewsRepository NewsRepository { get; }
+
+    //INotificationRepository NotificationRepository { get; }
+
     void Commit();
 
     void Rollback();
