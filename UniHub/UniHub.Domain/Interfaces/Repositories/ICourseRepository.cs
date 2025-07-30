@@ -1,4 +1,5 @@
 ﻿using UniHub.Domain.Entities;
+using UniHub.Domain.VOs;
 
 namespace UniHub.Domain.Interfaces.Repositories;
 
@@ -9,4 +10,5 @@ public interface ICourseRepository
     Task<List<Course>?> GetCoursesByUserAsync(long? userId);
     Task<Course?> GetCourseByCodeAsync(string? code);
     Task<List<Course>> GetAllCoursesAsync();
+    Task<List<CourseMemberVO>?> GetCourseMembersByCourseAsync(long? courseId);
 }

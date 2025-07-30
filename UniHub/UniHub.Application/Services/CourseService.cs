@@ -29,7 +29,7 @@ namespace UniHub.Application.Services
             {
                 var user = await _userService.GetUserByExternalIdentifierAsync(courseDTO.UserIdentifier!);
 
-                if (user.Role != UserRole.ADMIN.ToString())
+                if (user.Role != UserRole.Admin.ToString())
                     throw new HttpRequestFailException(nameof(ApplicationMsg.USR0003), ApplicationMsg.USR0003, HttpStatusCode.BadRequest);
 
                 var course = (courseDTO, user).Adapt<Course>();
@@ -41,11 +41,26 @@ namespace UniHub.Application.Services
 
                 return createCourseResponseDTO;
             }
-            catch (PostgresException ex) when (ex.SqlState == PostgresErrorCodes.UniqueViolation)
+            catch (Exception)
             {
                 _unitOfWork.Rollback();
 
-                throw new HttpRequestFailException(nameof(ApplicationMsg.USR0001), ApplicationMsg.USR0001, HttpStatusCode.BadRequest);
+                throw;
+            }
+        }
+
+        public async Task<GetCourseByCodeResponseDTO?> GetCourseByCodeAsync(string code)
+        {
+            try
+            {
+                var course = await _unitOfWork.CourseRepository.GetCourseByCodeAsync(code) ??
+                    throw new HttpRequestFailException(nameof(ApplicationMsg.CRS0001), string.Format(ApplicationMsg.CRS0001, code), HttpStatusCode.NotFound);
+
+                _unitOfWork.Commit();
+
+                GetCourseByCodeResponseDTO? getCourseByCodeResponseDTO = course.Adapt<GetCourseByCodeResponseDTO>();
+
+                return getCourseByCodeResponseDTO;
             }
             catch (Exception)
             {
@@ -61,11 +76,10 @@ namespace UniHub.Application.Services
             {
                 var user = await _userService.GetUserByExternalIdentifierAsync(courseMemberDTO.ExternalIdentifier!);
 
-                if (user.Role != UserRole.MEMBER.ToString())
+                if (user.Role != UserRole.Member.ToString())
                     throw new HttpRequestFailException(nameof(ApplicationMsg.USR0003), ApplicationMsg.USR0003, HttpStatusCode.BadRequest);
 
-                var course = await _unitOfWork.CourseRepository.GetCourseByCodeAsync(courseMemberDTO.Code!) ??
-                    throw new HttpRequestFailException(nameof(ApplicationMsg.CRS0001), string.Format(ApplicationMsg.CRS0001, courseMemberDTO.Code), HttpStatusCode.NotFound);
+                var course = await GetCourseByCodeAsync(courseMemberDTO.Code!);
 
                 var courseMember = (course, user).Adapt<CourseMember>();
 
@@ -103,6 +117,29 @@ namespace UniHub.Application.Services
                 GetCoursesByUserResponseDTO getCoursesByUserResponseDTO = (user, courses).Adapt<GetCoursesByUserResponseDTO>();
 
                 return getCoursesByUserResponseDTO;
+            }
+            catch (Exception)
+            {
+                _unitOfWork.Rollback();
+
+                throw;
+            }
+        }
+
+        public async Task<GetMembersByCourseCodeResponseDTO?> GetMembersByCourseCodeAsync(string code)
+        {
+            try
+            {
+                var course = await _unitOfWork.CourseRepository.GetCourseByCodeAsync(code) ??
+                    throw new HttpRequestFailException(nameof(ApplicationMsg.CRS0001), string.Format(ApplicationMsg.CRS0001, code), HttpStatusCode.NotFound);
+
+                var courseMembers = await _unitOfWork.CourseRepository.GetCourseMembersByCourseAsync(course.Id);
+
+                _unitOfWork.Commit();
+
+                GetMembersByCourseCodeResponseDTO? getMembersByCourseCodeResponseDTO = (course, courseMembers).Adapt<GetMembersByCourseCodeResponseDTO>();
+
+                return getMembersByCourseCodeResponseDTO;
             }
             catch (Exception)
             {

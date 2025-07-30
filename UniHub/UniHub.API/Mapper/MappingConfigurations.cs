@@ -1,18 +1,18 @@
 ﻿using Mapster;
 using System.Reflection;
 
-namespace UniHub.API.Mapper
+namespace UniHub.API.Mapper;
+
+public static class MappingConfigurations
 {
-    public static class MappingConfigurations
-    {
-        public static IServiceCollection RegisterMaps(this IServiceCollection services)
-        { 
-            services.RegisterUserMaps();
-            services.RegisterCourseMaps();
+    public static IServiceCollection RegisterMaps(this IServiceCollection services)
+    { 
+        services.RegisterUserMaps();
+        services.RegisterCourseMaps();
+        services.RegisterAssignmentMaps();
 
-            TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly());
+        TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly());
 
-            return services;
-        }
+        return services;
     }
 }

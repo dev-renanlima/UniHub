@@ -3,5 +3,7 @@
 public record GetCoursesByUserResponseDTO
 (
     string? UserIdentifier,
+    string? UserName,
+    int? NumberOfCourses,
     List<CourseByUserDTO> Courses    
 );

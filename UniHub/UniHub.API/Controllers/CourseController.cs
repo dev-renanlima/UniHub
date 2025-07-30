@@ -21,7 +21,7 @@ public class CourseController : ControllerBase
         _courseService = courseService;
     }
 
-    [HttpPost("/createCourse")]
+    [HttpPost("createCourse")]
     public async Task<IActionResult> CreateCourse(CreateCourseModel createCourseModel)
     {
         CourseDTO courseDTO = createCourseModel.Adapt<CourseDTO>();
@@ -31,7 +31,7 @@ public class CourseController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, response);
     }
 
-    [HttpPost("/addMemberByCode")]
+    [HttpPost("addMemberByCode")]
     public async Task<IActionResult> AddMemberByCode(AddMemberByCodeModel addMemberByCodeModel)
     {
         CourseMemberDTO courseMemberDTO = addMemberByCodeModel.Adapt<CourseMemberDTO>();
@@ -41,10 +41,26 @@ public class CourseController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, response);
     }
 
-    [HttpGet("/getCoursesByUser/{externalIdentifier}")]
+    [HttpGet("getCourseByCode/{code}")]
+    public async Task<IActionResult> GetCourseByCode([FromRoute] string code)
+    {
+        GetCourseByCodeResponseDTO? response = await _courseService.GetCourseByCodeAsync(code);
+
+        return StatusCode(StatusCodes.Status200OK, response);
+    }
+
+    [HttpGet("getCoursesByUser/{externalIdentifier}")]
     public async Task<IActionResult> GetCoursesByUser([FromRoute] string externalIdentifier)
     {
         GetCoursesByUserResponseDTO? response = await _courseService.GetCoursesByUserAsync(externalIdentifier);
+
+        return StatusCode(StatusCodes.Status200OK, response);
+    }
+
+    [HttpGet("getMembersByCourseCode/{code}")]
+    public async Task<IActionResult> GetMembersByCourseCode([FromRoute] string code)
+    {
+        GetMembersByCourseCodeResponseDTO? response = await _courseService.GetMembersByCourseCodeAsync(code);
 
         return StatusCode(StatusCodes.Status200OK, response);
     }

@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using UniHub.Domain.Entities;
 using UniHub.Domain.Interfaces.Repositories;
+using UniHub.Domain.VOs;
 using UniHub.Infrastructure.Context;
 
 namespace UniHub.Infrastructure.Repositories
@@ -116,6 +117,38 @@ namespace UniHub.Infrastructure.Repositories
             }
 
             return courses;
+        }
+
+        public async Task<List<CourseMemberVO>?> GetCourseMembersByCourseAsync(long? courseId)
+        {
+            using var command = _dbContext.CreateCommand();
+
+            command.CommandText = "SELECT * FROM public.\"GetCourseMembersByCourseId\"(@p_CourseId)";
+            command.CommandType = CommandType.Text;
+            command.Transaction = _dbContext.CurrentTransaction;
+
+            _dbContext.CreateParameter(command, "p_CourseId", courseId);
+
+            using var reader = await command.ExecuteReaderAsync();
+
+            List<CourseMemberVO>? courseMembers = [];
+
+            while (await reader.ReadAsync())
+            {
+                courseMembers.Add(
+                    new CourseMemberVO
+                    {
+                        CourseId = reader["CourseId"] is DBNull ? null : (long?)reader["CourseId"],
+                        CourseName = reader["CourseName"] is DBNull ? null : (string?)reader["CourseName"],
+                        UserId = reader["UserId"] is DBNull ? null : (long?)reader["UserId"],
+                        UserName = reader["UserName"] is DBNull ? null : (string?)reader["UserName"],
+                        UserIdentifier = reader["UserIdentifier"] is DBNull ? null : (string?)reader["UserIdentifier"],
+                        EnrollmentDate = reader["EnrollmentDate"] is DBNull ? null : (DateTime?)reader["EnrollmentDate"]
+                    }
+                );
+            }
+
+            return courseMembers;
         }
     }
 }

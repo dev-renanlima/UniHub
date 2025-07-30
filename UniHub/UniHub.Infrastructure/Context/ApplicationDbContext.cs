@@ -18,12 +18,14 @@ namespace UniHub.Infrastructure.Context
 
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Course> Courses { get; set; } = null!;
+        public DbSet<Assignment> Assignments { get; set; } = null!;
+        public DbSet<News> News { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserMappings).Assembly);
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(CourseMappings).Assembly);
-
+            //modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserMappings).Assembly);
+            //modelBuilder.ApplyConfigurationsFromAssembly(typeof(CourseMappings).Assembly);
+            
             base.OnModelCreating(modelBuilder);
         }
 

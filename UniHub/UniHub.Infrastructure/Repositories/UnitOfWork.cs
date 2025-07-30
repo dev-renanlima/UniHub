@@ -9,6 +9,8 @@ namespace UniHub.Infrastructure.Repositories
         private ApplicationDbContext _dbContext;
         private IUserRepository? _userRepository;
         private ICourseRepository? _courseRepository;
+        private IAssignmentRepository? _assignmentRepository;
+        private INewsRepository? _newsRepository;
         private string? _connectionString;
 
         public UnitOfWork(ApplicationDbContext dbContext, IConfiguration configuration)
@@ -47,6 +49,28 @@ namespace UniHub.Infrastructure.Repositories
 
                 _courseRepository ??= new CourseRepository(_dbContext);
                 return _courseRepository;
+            }
+        }
+
+        public IAssignmentRepository AssignmentRepository
+        {
+            get
+            {
+                EnsureConnectionInitialized();
+
+                _assignmentRepository ??= new AssignmentRepository(_dbContext);
+                return _assignmentRepository;
+            }
+        }
+
+        public INewsRepository NewsRepository
+        {
+            get
+            {
+                EnsureConnectionInitialized();
+
+                _newsRepository ??= new NewsRepository(_dbContext);
+                return _newsRepository;
             }
         }
 
