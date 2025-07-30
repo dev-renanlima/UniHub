@@ -41,12 +41,6 @@ namespace UniHub.Application.Services
 
                 return createCourseResponseDTO;
             }
-            catch (PostgresException ex) when (ex.SqlState == PostgresErrorCodes.UniqueViolation)
-            {
-                _unitOfWork.Rollback();
-
-                throw new HttpRequestFailException(nameof(ApplicationMsg.USR0001), ApplicationMsg.USR0001, HttpStatusCode.BadRequest);
-            }
             catch (Exception)
             {
                 _unitOfWork.Rollback();
@@ -67,12 +61,6 @@ namespace UniHub.Application.Services
                 GetCourseByCodeResponseDTO? getCourseByCodeResponseDTO = course.Adapt<GetCourseByCodeResponseDTO>();
 
                 return getCourseByCodeResponseDTO;
-            }
-            catch (PostgresException ex) when (ex.SqlState == PostgresErrorCodes.UniqueViolation)
-            {
-                _unitOfWork.Rollback();
-
-                throw new HttpRequestFailException(nameof(ApplicationMsg.USR0004), ApplicationMsg.USR0004, HttpStatusCode.BadRequest);
             }
             catch (Exception)
             {
@@ -129,6 +117,29 @@ namespace UniHub.Application.Services
                 GetCoursesByUserResponseDTO getCoursesByUserResponseDTO = (user, courses).Adapt<GetCoursesByUserResponseDTO>();
 
                 return getCoursesByUserResponseDTO;
+            }
+            catch (Exception)
+            {
+                _unitOfWork.Rollback();
+
+                throw;
+            }
+        }
+
+        public async Task<GetMembersByCourseCodeResponseDTO?> GetMembersByCourseCodeAsync(string code)
+        {
+            try
+            {
+                var course = await _unitOfWork.CourseRepository.GetCourseByCodeAsync(code) ??
+                    throw new HttpRequestFailException(nameof(ApplicationMsg.CRS0001), string.Format(ApplicationMsg.CRS0001, code), HttpStatusCode.NotFound);
+
+                var courseMembers = await _unitOfWork.CourseRepository.GetCourseMembersByCourseAsync(course.Id);
+
+                _unitOfWork.Commit();
+
+                GetMembersByCourseCodeResponseDTO? getMembersByCourseCodeResponseDTO = (course, courseMembers).Adapt<GetMembersByCourseCodeResponseDTO>();
+
+                return getMembersByCourseCodeResponseDTO;
             }
             catch (Exception)
             {

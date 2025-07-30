@@ -6,6 +6,8 @@ using UniHub.Domain.DTOs;
 using UniHub.Domain.DTOs.Responses.Course;
 using UniHub.Domain.DTOs.Responses.User;
 using UniHub.Domain.Entities;
+using UniHub.Domain.Enums;
+using UniHub.Domain.VOs;
 
 namespace UniHub.API.Mapper;
 
@@ -62,13 +64,31 @@ public static class CourseMappingConfigurations
         TypeAdapterConfig<(GetUserResponseDTO User, List<Course?> Courses), GetCoursesByUserResponseDTO>
             .NewConfig()
                 .Map(dest => dest.UserIdentifier, src => src.User.ExternalIdentifier)
-                .Map(dest => dest.Courses, src => src.Courses);
+                .Map(dest => dest.UserName, src => src.User.Name)
+                .Map(dest => dest.Courses, src => src.Courses)
+                .Map(dest => dest.NumberOfCourses, src => src.Courses.Count);
         #endregion
 
         #region Course - GetCoursesByCode
         TypeAdapterConfig<Course, GetCourseByCodeResponseDTO>
             .NewConfig()
                 .Map(dest => dest.CourseId, src => src.Id!);
+        #endregion
+
+        #region Course - GetMembersByCourseCode
+        TypeAdapterConfig<(Course Course, List<CourseMemberVO> CourseMembers), GetMembersByCourseCodeResponseDTO>
+            .NewConfig()
+                .Map(dest => dest.CourseId, src => src.Course.Id!)
+                .Map(dest => dest.CourseName, src => src.Course.Name!)
+                .Map(dest => dest.Code, src => src.Course.Code!)
+                .Map(dest => dest.CourseMembers, src =>
+                    src.CourseMembers!.Select(courseMember => new CourseMemberVO
+                    {
+                        UserIdentifier = courseMember.UserIdentifier,
+                        UserName = courseMember.UserName,
+                        EnrollmentDate = courseMember.EnrollmentDate
+                    }).ToList())
+                .Map(dest => dest.NumberOfMembers, src => src.CourseMembers.Count); 
         #endregion
     }
 }

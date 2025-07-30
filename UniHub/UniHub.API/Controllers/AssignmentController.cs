@@ -20,7 +20,7 @@ public class AssignmentController : ControllerBase
         _assignmentService = assignmentService;
     }
 
-    [HttpPost("/createAssignment")]
+    [HttpPost("createAssignment")]
     public async Task<IActionResult> CreateAssignment(CreateAssignmentModel createAssignmentModel)
     {
         AssignmentDTO assignmentDTO = createAssignmentModel.Adapt<AssignmentDTO>();

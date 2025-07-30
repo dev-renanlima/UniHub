@@ -9,5 +9,6 @@ namespace UniHub.Domain.Interfaces.Services
         Task<GetCourseByCodeResponseDTO?> GetCourseByCodeAsync(string code);
         Task<AddCourseMemberResponseDTO> AddMemberByCodeAsync(CourseMemberDTO courseMemberDTO);
         Task<GetCoursesByUserResponseDTO?> GetCoursesByUserAsync(string externalIdentifier);
+        Task<GetMembersByCourseCodeResponseDTO?> GetMembersByCourseCodeAsync(string code);
     }
 }
