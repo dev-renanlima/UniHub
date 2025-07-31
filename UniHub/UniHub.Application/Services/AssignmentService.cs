@@ -30,7 +30,7 @@ namespace UniHub.Application.Services
             {
                 var user = await _userService.GetUserByExternalIdentifierAsync(assignmentDTO.UserIdentification!);
 
-                if (user.Role != UserRole.Admin.ToString())
+                if (user.Role != UserRole.ADMIN.ToString())
                     throw new HttpRequestFailException(nameof(ApplicationMsg.USR0003), ApplicationMsg.USR0003, HttpStatusCode.BadRequest);
 
                 var course = await _courseService.GetCourseByCodeAsync(assignmentDTO.CourseCode!);

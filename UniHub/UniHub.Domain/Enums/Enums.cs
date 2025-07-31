@@ -2,8 +2,8 @@
 {
     public enum UserRole
     {
-        Admin = 0,
-        Member = 1
+        ADMIN = 0,
+        MEMBER = 1
     }
 
     public enum NotificationType

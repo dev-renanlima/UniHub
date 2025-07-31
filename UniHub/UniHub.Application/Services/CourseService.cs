@@ -29,7 +29,7 @@ namespace UniHub.Application.Services
             {
                 var user = await _userService.GetUserByExternalIdentifierAsync(courseDTO.UserIdentifier!);
 
-                if (user.Role != UserRole.Admin.ToString())
+                if (user.Role != UserRole.ADMIN.ToString())
                     throw new HttpRequestFailException(nameof(ApplicationMsg.USR0003), ApplicationMsg.USR0003, HttpStatusCode.BadRequest);
 
                 var course = (courseDTO, user).Adapt<Course>();
@@ -76,7 +76,7 @@ namespace UniHub.Application.Services
             {
                 var user = await _userService.GetUserByExternalIdentifierAsync(courseMemberDTO.ExternalIdentifier!);
 
-                if (user.Role != UserRole.Member.ToString())
+                if (user.Role != UserRole.MEMBER.ToString())
                     throw new HttpRequestFailException(nameof(ApplicationMsg.USR0003), ApplicationMsg.USR0003, HttpStatusCode.BadRequest);
 
                 var course = await GetCourseByCodeAsync(courseMemberDTO.Code!);

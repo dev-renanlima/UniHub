@@ -40,7 +40,7 @@ public static class AssignmentMappingConfigurations
                     src.Assignment.AssignmentAttachments!.Select(attachment => new AssignmentAttachmentDTO
                     {
                         Url = attachment.Url,
-                        Type = src.User.Role == UserRole.Admin.ToString()
+                        Type = src.User.Role == UserRole.ADMIN.ToString()
                         ? AssignmentAttachmentType.CreatedByTeacher
                         : AssignmentAttachmentType.SubmittedByStudent
                     }).ToList());
