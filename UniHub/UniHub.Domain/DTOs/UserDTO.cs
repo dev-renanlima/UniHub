@@ -4,10 +4,18 @@ namespace UniHub.Domain.DTOs
 {
     public class UserDTO
     {
-        public string? ExternalIdentifier { get; set; }
+        public required string InternalIdentifier { get; set; }
 
-        public string? Name { get; set; }
+        public required string ExternalIdentifier { get; set; }
 
-        public int? Role { get; set; }
+        public required string Name { get; set; } 
+        
+        public required string Email { get; set; }
+
+        public UserRole Role { get; set; }
+
+        public UserStatus Status { get; set; }
+
+        public string? ProfileUrl { get; set; }
     }
 }
