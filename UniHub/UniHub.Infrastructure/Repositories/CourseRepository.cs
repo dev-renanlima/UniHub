@@ -19,6 +19,8 @@ namespace UniHub.Infrastructure.Repositories
         {
             var parameters = new (string, object?)[]
             {
+                ("p_Id", course.Id),
+                ("p_InternalIdentifier", course.InternalIdentifier),
                 ("p_UserId", course.UserId),
                 ("p_Name", course.Name),
                 ("p_Code", course.Code),
@@ -30,7 +32,7 @@ namespace UniHub.Infrastructure.Repositories
 
             var result = await command.ExecuteScalarAsync();
 
-            course.SetIdentity((long)result!);
+            course.SetIdentity((Guid)result!);
 
             return course;
         }
@@ -50,7 +52,7 @@ namespace UniHub.Infrastructure.Repositories
 
             var result = await command.ExecuteScalarAsync();
 
-            courseMember.SetIdentity((long)result!);
+            courseMember.SetIdentity((Guid)result!);
 
             return courseMember;
         }
@@ -78,8 +80,8 @@ namespace UniHub.Infrastructure.Repositories
             {
                 course = new Course
                 {
-                    Id = reader["Id"] is DBNull ? null : (long?)reader["Id"],
-                    UserId = reader["UserId"] is DBNull ? null : (long?)reader["UserId"],
+                    Id = (Guid)reader["Id"],
+                    UserId = reader["UserId"] is DBNull ? null : (Guid?)reader["UserId"],
                     Name = reader["Name"] is DBNull ? null : (string)reader["Name"],
                     Code = reader["Code"] is DBNull ? null : (string)reader["Code"],
                     CreationDate = reader["CreationDate"] is DBNull ? null : (DateTime?)reader["CreationDate"],
@@ -90,7 +92,7 @@ namespace UniHub.Infrastructure.Repositories
             return course;
         }
 
-        public async Task<List<CourseVO>?> GetCoursesByUserIdAsync(long? userId)
+        public async Task<List<CourseVO>?> GetCoursesByUserIdAsync(Guid? userId)
         {
             var parameters = new (string, object?)[]
             {
@@ -108,10 +110,10 @@ namespace UniHub.Infrastructure.Repositories
                 courses.Add(
                     new CourseVO
                     {
-                        CourseId = reader["CourseId"] is DBNull ? null : (long?)reader["CourseId"],
+                        CourseId = reader["CourseId"] is DBNull ? null : (Guid?)reader["CourseId"],
                         CourseName = reader["CourseName"] is DBNull ? null : (string)reader["CourseName"],
                         CourseCode = reader["CourseCode"] is DBNull ? null : (string)reader["CourseCode"],
-                        UserId = reader["UserId"] is DBNull ? null : (long?)reader["UserId"],
+                        UserId = reader["UserId"] is DBNull ? null : (Guid?)reader["UserId"],
                         UserName = reader["UserName"] is DBNull ? null : (string)reader["UserName"],
                         UserIdentifier = reader["UserIdentifier"] is DBNull ? null : (string)reader["UserIdentifier"],
                         NumberOfMembers = reader["NumberOfMembers"] is DBNull ? null : (long?)reader["NumberOfMembers"],
@@ -124,7 +126,7 @@ namespace UniHub.Infrastructure.Repositories
             return courses;
         }
 
-        public async Task<List<CourseMemberVO>?> GetCourseMembersByCourseIdAsync(long? courseId)
+        public async Task<List<CourseMemberVO>?> GetCourseMembersByCourseIdAsync(Guid? courseId)
         {
             var parameters = new (string, object?)[]
             {
@@ -142,9 +144,9 @@ namespace UniHub.Infrastructure.Repositories
                 courseMembers.Add(
                     new CourseMemberVO
                     {
-                        CourseId = reader["CourseId"] is DBNull ? null : (long?)reader["CourseId"],
+                        CourseId = reader["CourseId"] is DBNull ? null : (Guid?)reader["CourseId"],
                         CourseName = reader["CourseName"] is DBNull ? null : (string?)reader["CourseName"],
-                        UserId = reader["UserId"] is DBNull ? null : (long?)reader["UserId"],
+                        UserId = reader["UserId"] is DBNull ? null : (Guid?)reader["UserId"],
                         UserIdentifier = reader["UserIdentifier"] is DBNull ? null : (string?)reader["UserIdentifier"],
                         UserName = reader["UserName"] is DBNull ? null : (string?)reader["UserName"],
                         EnrollmentDate = reader["EnrollmentDate"] is DBNull ? null : (DateTime?)reader["EnrollmentDate"]

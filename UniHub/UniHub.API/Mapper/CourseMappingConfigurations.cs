@@ -1,10 +1,10 @@
 ﻿using Mapster;
-using UniHub.API.Extensions;
 using UniHub.API.Model.Course.CreateCourse;
 using UniHub.Domain.DTOs;
 using UniHub.Domain.DTOs.Responses.Course;
 using UniHub.Domain.DTOs.Responses.User;
 using UniHub.Domain.Entities;
+using UniHub.Domain.Extensions;
 using UniHub.Domain.VOs;
 
 namespace UniHub.API.Mapper;

@@ -30,7 +30,7 @@ namespace UniHub.Infrastructure.Repositories
 
             var result = await command.ExecuteScalarAsync();
             
-            news.SetIdentity((long)result!);
+            news.SetIdentity((Guid)result!);
 
             return news;
         }
@@ -49,7 +49,7 @@ namespace UniHub.Infrastructure.Repositories
 
             var result = await command.ExecuteScalarAsync();
 
-            newsAttachment.SetIdentity((long)result!);
+            newsAttachment.SetIdentity((Guid)result!);
 
             return newsAttachment;
         }

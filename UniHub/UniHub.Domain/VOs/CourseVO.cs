@@ -2,10 +2,10 @@
 
 public class CourseVO
 {
-    public long? CourseId { get; set; }
+    public Guid? CourseId { get; set; }
     public string? CourseName { get; set; }
     public string? CourseCode{ get; set; }
-    public long? UserId { get; set; }
+    public Guid? UserId { get; set; }
     public string? UserIdentifier { get; set; }
     public string? UserName { get; set; }
     public long? NumberOfMembers { get; set; }

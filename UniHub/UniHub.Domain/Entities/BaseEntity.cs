@@ -1,39 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using UniHub.Domain.Extensions;
 
 namespace UniHub.Domain.Entities;
 
 public class BaseEntity
 {
-    #region privateProperties
-    private long? _id = null;
-    #endregion
-
-    public virtual long? Id
+    public BaseEntity()
     {
-        get
-        {
-            return _id;
-        }
-        set
-        {
-            _id = value;
-        }
+        Id = Guid.NewGuid();
+        InternalIdentifier = UUIDExtensions.GenerateNanoId();
     }
 
-    public virtual long? GetIdentity() { return this.Id; }
+    public virtual Guid Id { get; set; }
+    public virtual string InternalIdentifier { get; set; }
+    public virtual DateTime? CreationDate { get; set; }
+    public virtual DateTime? UpdateDate { get; set; }
+    public virtual DateTime? DeletionDate { get; set; }
 
-    public virtual void SetIdentity(long? id)
-    {
-        this.Id = id;
-    }
-
-    public DateTime? CreationDate { get; set; } 
-
-    public DateTime? UpdateDate { get; set; }
-
-    public DateTime? DeletionDate { get; set; }
+    public virtual Guid GetIdentity() => Id;
+    public virtual void SetIdentity(Guid id) => Id = id;
 }

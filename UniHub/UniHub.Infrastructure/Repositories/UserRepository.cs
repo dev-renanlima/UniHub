@@ -19,6 +19,7 @@ namespace UniHub.Infrastructure.Repositories
         {
             var parameters = new (string, object?)[]
             {
+                ("p_Id", user.Id),
                 ("p_InternalIdentifier", user.InternalIdentifier),
                 ("p_ExternalIdentifier", user.ExternalIdentifier),
                 ("p_Name", user.Name),
@@ -34,15 +35,10 @@ namespace UniHub.Infrastructure.Repositories
 
             var result = await command.ExecuteScalarAsync();
 
-            user.SetIdentity((long)result!);
+            user.SetIdentity((Guid)result!);
 
             return user;
         } 
-
-        public Task<List<User>> GetAllUsersAsync()
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<User?> GetUserByIdentifierAsync(string identifier)
         {
@@ -61,8 +57,8 @@ namespace UniHub.Infrastructure.Repositories
             {
                 user = new User
                 {
-                    Id = reader["Id"] is DBNull ? null : (long?)reader["Id"],
-                    InternalIdentifier = reader["InternalIdentifier"] is DBNull ? null : (string)reader["InternalIdentifier"],
+                    Id = (Guid)reader["Id"],
+                    InternalIdentifier = (string)reader["InternalIdentifier"],
                     ExternalIdentifier = reader["ExternalIdentifier"] is DBNull ? null : (string)reader["ExternalIdentifier"],
                     Name = reader["Name"] is DBNull ? null : (string)reader["Name"],
                     Email = reader["Email"] is DBNull ? null : (string)reader["Email"],
@@ -77,7 +73,7 @@ namespace UniHub.Infrastructure.Repositories
             return user;
         }
 
-        public async Task<User?> GetUserByIdAsync(long? userId)
+        public async Task<User?> GetUserByIdAsync(Guid? userId)
         {
             var parameters = new (string, object?)[]
             {
@@ -94,8 +90,8 @@ namespace UniHub.Infrastructure.Repositories
             {
                 user = new User
                 {
-                    Id = reader["Id"] is DBNull ? null : (long?)reader["Id"],
-                    InternalIdentifier = reader["InternalIdentifier"] is DBNull ? null : (string)reader["InternalIdentifier"],
+                    Id = (Guid)reader["Id"],
+                    InternalIdentifier = (string)reader["InternalIdentifier"],
                     ExternalIdentifier = reader["ExternalIdentifier"] is DBNull ? null : (string)reader["ExternalIdentifier"],
                     Name = reader["Name"] is DBNull ? null : (string)reader["Name"],
                     Email = reader["Email"] is DBNull ? null : (string)reader["Email"],

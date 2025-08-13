@@ -4,10 +4,10 @@ namespace UniHub.Domain.Entities;
 
 public class AssignmentAttachment : BaseEntity
 {
-    public long? AssignmentId { get; set; }
+    public Guid? AssignmentId { get; set; }
     public Assignment Assignment { get; set; } = null!;
 
-    public long? UserId { get; set; }
+    public Guid? UserId { get; set; }
     public User User { get; set; } = null!;
 
     public string? Url { get; set; }

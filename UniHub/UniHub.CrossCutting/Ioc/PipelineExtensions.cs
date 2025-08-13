@@ -15,7 +15,7 @@ public static class PipelineExtensions
     {
         services.AddDbContext<ApplicationDbContext>(options =>
             //options.UseSqlServer(configuration.GetConnectionString("UniHubConnection")));
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql(configuration.GetConnectionString("UniHubConnection")));
 
         return services;
     }

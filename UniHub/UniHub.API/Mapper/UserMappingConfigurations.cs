@@ -1,10 +1,10 @@
 ﻿using Mapster;
-using UniHub.API.Extensions;
 using UniHub.API.Model.User.CreateUser;
 using UniHub.Domain.DTOs;
 using UniHub.Domain.DTOs.Responses.User;
 using UniHub.Domain.Entities;
 using UniHub.Domain.Enums;
+using UniHub.Domain.Extensions;
 
 namespace UniHub.API.Mapper
 {
@@ -14,7 +14,7 @@ namespace UniHub.API.Mapper
         {
             TypeAdapterConfig<CreateUserModel, UserDTO>
                     .NewConfig()
-                    .Map(dest => dest.InternalIdentifier, src => GuidExtensions.GenerateObjectId())
+                    .Map(dest => dest.InternalIdentifier, src => UUIDExtensions.GenerateNanoId())
                     .Map(dest => dest.ExternalIdentifier, src => src.Body!.ExternalIdentifier)
                     .Map(dest => dest.Name, src => src.Body!.Name)
                     .Map(dest => dest.Email, src => src.Body!.Email)

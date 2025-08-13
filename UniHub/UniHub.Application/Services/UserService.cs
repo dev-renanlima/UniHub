@@ -68,7 +68,7 @@ namespace UniHub.Application.Services
             }
         }
 
-        public async Task<GetUserResponseDTO> GetUserByIdAsync(long? userId)
+        public async Task<GetUserResponseDTO> GetUserByIdAsync(Guid? userId)
         {
             try
             {

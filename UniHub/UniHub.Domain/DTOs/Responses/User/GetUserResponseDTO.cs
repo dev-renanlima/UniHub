@@ -2,7 +2,7 @@
 
 public record GetUserResponseDTO
 (
-    long? Id,
+    Guid? Id,
     string? InternalIdentifier,
     string? ExternalIdentifier,
     string? Name,
