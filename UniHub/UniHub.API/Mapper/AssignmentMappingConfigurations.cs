@@ -27,7 +27,7 @@ public static class AssignmentMappingConfigurations
                 .Map(dest => dest.ExpirationDate, src => src.Body!.ExpirationDate)
                 .Map(dest => dest.AssignmentAttachments, src => src.Body!.AssignmentAttachments ?? new());
 
-        TypeAdapterConfig<(GetCourseByCodeResponseDTO Course, GetUserResponseDTO User, AssignmentDTO Assignment), Assignment>
+        TypeAdapterConfig<(GetCourseResponseDTO Course, GetUserResponseDTO User, AssignmentDTO Assignment), Assignment>
             .NewConfig()
                 .Map(dest => dest.CourseId, src => src.Course.CourseId)
                 .Map(dest => dest.Course, src => src.Course)
@@ -40,9 +40,9 @@ public static class AssignmentMappingConfigurations
                     src.Assignment.AssignmentAttachments!.Select(attachment => new AssignmentAttachmentDTO
                     {
                         Url = attachment.Url,
-                        Type = src.User.Role == UserRole.ADMIN.ToString()
-                        ? AssignmentAttachmentType.CreatedByTeacher
-                        : AssignmentAttachmentType.SubmittedByStudent
+                        Type = (UserRole?)src.User.Role == UserRole.ADMIN
+                        ? AssignmentAttachmentType.CREATED
+                        : AssignmentAttachmentType.SUBMITTED
                     }).ToList());
 
         #region AssignmentAttachment - Create

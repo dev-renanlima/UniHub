@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using NpgsqlTypes;
+using System.Data;
 using UniHub.Domain.Entities;
 using UniHub.Infrastructure.Context.Mappings;
 
@@ -118,6 +119,33 @@ namespace UniHub.Infrastructure.Context
 
             command.Parameters.Add(parameter); 
             return parameter;
+        }
+
+        /// <summary>
+        /// Cria um novo comando Npgsql no formato do PostgreeSQL.
+        /// </summary>
+        /// <param name="functionName">O nome da função que será utilizada no comando.</param>
+        /// <param name="parameters">Lista de parâmetros que serão passados para a função.</param>
+        /// <returns>Um objeto NpgsqlCommand no formato do PostgreeSQL.</returns>
+        public NpgsqlCommand CreateFunctionCommand(string functionName, params (string name, object? value)[] parameters)
+        {
+            var command = CreateCommand();
+
+            command.CommandType = CommandType.Text;
+            command.Transaction = CurrentTransaction;
+
+            foreach (var (name, value) in parameters)
+                CreateParameter(command, name, value);
+
+            string paramPlaceholders = parameters.Length > 0
+                ? string.Join(", ", command.Parameters.Select(p => "@" + p.ParameterName))
+                : string.Empty;
+
+            command.CommandText = parameters.Length > 0
+                ? $"SELECT * FROM public.\"{functionName}\"({paramPlaceholders})"
+                : $"SELECT * FROM public.\"{functionName}\"()";
+
+            return command;
         }
     }
 }

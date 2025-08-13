@@ -6,7 +6,8 @@ public record CreateUserResponseDTO
     string? ExternalIdentifier,
     string? Name,
     string? Email,
-    string? Role,
-    string? Status,
-    string? ProfileUrl
+    int? Role,
+    int? Status,
+    string? ProfileUrl,
+    DateTime? CreationDate
 );

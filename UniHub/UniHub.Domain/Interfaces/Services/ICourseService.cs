@@ -6,9 +6,8 @@ namespace UniHub.Domain.Interfaces.Services
     public interface ICourseService
     {
         Task<CreateCourseResponseDTO> CreateAsync(CourseDTO courseDTO);
-        Task<GetCourseByCodeResponseDTO?> GetCourseByCodeAsync(string code);
+        Task<GetCourseResponseDTO?> GetCourseByCodeAsync(string code);
         Task<AddCourseMemberResponseDTO> AddMemberByCodeAsync(CourseMemberDTO courseMemberDTO);
-        Task<GetCoursesByUserResponseDTO?> GetCoursesByUserAsync(string externalIdentifier);
-        Task<GetMembersByCourseCodeResponseDTO?> GetMembersByCourseCodeAsync(string code);
+        Task<GetCoursesByUserResponseDTO?> GetCoursesByUserIdentifierAsync(string identifier);
     }
 }

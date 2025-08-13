@@ -7,8 +7,8 @@ public interface ICourseRepository
 {
     Task<Course?> CreateAsync(Course course);
     Task<CourseMember?> CreateCourseMemberAsync(CourseMember courseMember);
-    Task<List<Course>?> GetCoursesByUserAsync(long? userId);
+    Task<List<CourseVO>?> GetCoursesByUserIdAsync(long? userId);
     Task<Course?> GetCourseByCodeAsync(string? code);
     Task<List<Course>> GetAllCoursesAsync();
-    Task<List<CourseMemberVO>?> GetCourseMembersByCourseAsync(long? courseId);
+    Task<List<CourseMemberVO>?> GetCourseMembersByCourseIdAsync(long? courseId);
 }

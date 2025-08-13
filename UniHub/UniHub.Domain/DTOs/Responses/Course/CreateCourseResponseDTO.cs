@@ -5,5 +5,6 @@ public record CreateCourseResponseDTO
     long? Id,
     string? UserIdentifier,
     string? Name,
-    string? Code
+    string? Code,
+    DateTime? CreationDate
 );

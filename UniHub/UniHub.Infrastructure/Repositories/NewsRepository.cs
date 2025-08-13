@@ -29,7 +29,7 @@ namespace UniHub.Infrastructure.Repositories
             _dbContext.CreateParameter(command, "p_UpdateDate", DateTime.UtcNow);
 
             var result = await command.ExecuteScalarAsync();
-
+            
             news.SetIdentity((long)result!);
 
             return news;

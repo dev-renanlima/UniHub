@@ -9,6 +9,7 @@ public static class MappingConfigurations
     { 
         services.RegisterUserMaps();
         services.RegisterCourseMaps();
+        services.RegisterCourseMemberMaps();
         services.RegisterAssignmentMaps();
 
         TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly());

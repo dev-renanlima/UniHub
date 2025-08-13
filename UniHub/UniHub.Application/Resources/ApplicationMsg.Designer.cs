@@ -70,6 +70,15 @@ namespace UniHub.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Já existe um curso com os parâmetros informados.
+        /// </summary>
+        public static string CRS0002 {
+            get {
+                return ResourceManager.GetString("CRS0002", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Já existe um usuário com os parâmetros informados.
         /// </summary>
         public static string USR0001 {
@@ -88,7 +97,7 @@ namespace UniHub.Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to O usuário não pode realizar esta ação.
+        ///   Looks up a localized string similar to O usuário não pode realizar essa ação.
         /// </summary>
         public static string USR0003 {
             get {
