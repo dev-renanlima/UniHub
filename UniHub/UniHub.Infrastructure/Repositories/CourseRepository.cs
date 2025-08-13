@@ -17,6 +17,8 @@ namespace UniHub.Infrastructure.Repositories
 
         public async Task<Course?> CreateAsync(Course course)
         {
+            course.SetDates();
+
             var parameters = new (string, object?)[]
             {
                 ("p_Id", course.Id),
@@ -24,8 +26,8 @@ namespace UniHub.Infrastructure.Repositories
                 ("p_UserId", course.UserId),
                 ("p_Name", course.Name),
                 ("p_Code", course.Code),
-                ("p_CreationDate", DateTime.UtcNow),
-                ("p_UpdateDate", DateTime.UtcNow)
+                ("p_CreationDate", course.CreationDate),
+                ("p_UpdateDate", course.UpdateDate)
             };
 
             using var command = _dbContext.CreateFunctionCommand(functionName: "InsertCourse", parameters);
@@ -39,13 +41,17 @@ namespace UniHub.Infrastructure.Repositories
 
         public async Task<CourseMember?> CreateCourseMemberAsync(CourseMember courseMember)
         {
+            courseMember.SetDates();
+
             var parameters = new (string, object?)[]
             {
+                ("p_Id", courseMember.Id),
+                ("p_InternalIdentifier", courseMember.InternalIdentifier),
                 ("p_CourseId", courseMember.CourseId),
                 ("p_UserId", courseMember.UserId),
-                ("p_EnrollmentDate", DateTime.UtcNow),
-                ("p_CreationDate", DateTime.UtcNow),
-                ("p_UpdateDate", DateTime.UtcNow)
+                ("p_EnrollmentDate", courseMember.EnrollmentDate),
+                ("p_CreationDate", courseMember.CreationDate),
+                ("p_UpdateDate", courseMember.UpdateDate)
             };
 
             using var command = _dbContext.CreateFunctionCommand(functionName: "InsertCourseMember", parameters);
@@ -70,7 +76,6 @@ namespace UniHub.Infrastructure.Repositories
             };
 
             using var command = _dbContext.CreateFunctionCommand(functionName: "GetCourseByCode", parameters);
-
 
             using var reader = await command.ExecuteReaderAsync();
 
@@ -111,6 +116,7 @@ namespace UniHub.Infrastructure.Repositories
                     new CourseVO
                     {
                         CourseId = reader["CourseId"] is DBNull ? null : (Guid?)reader["CourseId"],
+                        CourseIdentifier = reader["CourseIdentifier"] is DBNull ? null : (string)reader["CourseIdentifier"],
                         CourseName = reader["CourseName"] is DBNull ? null : (string)reader["CourseName"],
                         CourseCode = reader["CourseCode"] is DBNull ? null : (string)reader["CourseCode"],
                         UserId = reader["UserId"] is DBNull ? null : (Guid?)reader["UserId"],

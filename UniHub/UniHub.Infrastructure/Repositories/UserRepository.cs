@@ -17,6 +17,8 @@ namespace UniHub.Infrastructure.Repositories
 
         public async Task<User?> CreateAsync(User user)
         {
+            user.SetDates();
+
             var parameters = new (string, object?)[]
             {
                 ("p_Id", user.Id),
@@ -27,8 +29,8 @@ namespace UniHub.Infrastructure.Repositories
                 ("p_Role", user.Role.ToString()),
                 ("p_Status", user.Status.ToString()),
                 ("p_ProfileUrl", user.ProfileUrl),
-                ("p_CreationDate", DateTime.UtcNow),
-                ("p_UpdateDate", DateTime.UtcNow)
+                ("p_CreationDate", user.CreationDate),
+                ("p_UpdateDate", user.UpdateDate)
             };
 
             using var command = _dbContext.CreateFunctionCommand(functionName: "InsertUser", parameters);

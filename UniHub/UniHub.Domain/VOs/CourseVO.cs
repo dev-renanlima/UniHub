@@ -3,6 +3,7 @@
 public class CourseVO
 {
     public Guid? CourseId { get; set; }
+    public string? CourseIdentifier { get; set; }
     public string? CourseName { get; set; }
     public string? CourseCode{ get; set; }
     public Guid? UserId { get; set; }

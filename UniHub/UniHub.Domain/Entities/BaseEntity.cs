@@ -18,4 +18,9 @@ public class BaseEntity
 
     public virtual Guid GetIdentity() => Id;
     public virtual void SetIdentity(Guid id) => Id = id;
+    public virtual void SetDates()
+    {
+        CreationDate = DateTime.UtcNow;
+        UpdateDate = DateTime.UtcNow;
+    }
 }

@@ -1,9 +1,12 @@
 ﻿
 /*
 
+===================== FUNCTION: InsertUser =====================
 
-CREATE OR REPLACE FUNCTION public."InsertUser"(
-    p_InternalIdentifier VARCHAR(50),
+
+CREATE OR REPLACE FUNCTION "InsertUser"(
+	p_Id UUID,
+    p_InternalIdentifier VARCHAR(12),
 	p_ExternalIdentifier VARCHAR(50),    
     p_Name VARCHAR(150),
     p_Email VARCHAR(150),
@@ -13,12 +16,13 @@ CREATE OR REPLACE FUNCTION public."InsertUser"(
 	p_CreationDate TIMESTAMP,
     p_UpdateDate TIMESTAMP
 )
-RETURNS BIGINT
+RETURNS UUID
 AS $$
 DECLARE
-    new_id BIGINT;
+    new_id UUID;
 BEGIN
     INSERT INTO "User" (
+		"Id",
 		"InternalIdentifier",
         "ExternalIdentifier",
         "Name",
@@ -30,6 +34,7 @@ BEGIN
         "UpdateDate"
     )
     VALUES (
+		p_Id,
 		p_InternalIdentifier,
         p_ExternalIdentifier,
         p_Name,
@@ -47,13 +52,16 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+===================== FUNCTION: GetUserByIdentifier =====================
+
+
 CREATE OR REPLACE FUNCTION "GetUserByIdentifier"(
     p_Identifier VARCHAR(50)
 )
 RETURNS TABLE (
-    "Id" BIGINT,
-    "ExternalIdentifier" VARCHAR(50),
-    "InternalIdentifier" VARCHAR(50),
+    "Id" UUID,
+	"InternalIdentifier" VARCHAR(12),
+    "ExternalIdentifier" VARCHAR(50),    
     "Name" VARCHAR(150),
 	"Email" VARCHAR(150),
     "Role" VARCHAR(20),
@@ -67,8 +75,8 @@ BEGIN
     RETURN QUERY
 		SELECT
 			ue."Id",
-			ue."ExternalIdentifier",
 			ue."InternalIdentifier",
+			ue."ExternalIdentifier",			
 			ue."Name",
 			ue."Email",
 			ue."Role",
@@ -83,8 +91,8 @@ BEGIN
 		UNION ALL
 		SELECT
 			ui."Id",
-			ui."ExternalIdentifier",
 			ui."InternalIdentifier",
+			ui."ExternalIdentifier",			
 			ui."Name",
 			ui."Email",
 			ui."Role",
@@ -105,13 +113,16 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+===================== FUNCTION: GetUserById =====================
+
+
 CREATE OR REPLACE FUNCTION "GetUserById"(
-    p_Id BIGINT
+    p_Id UUID
 )
 RETURNS TABLE (
-    "Id" BIGINT,
-    "ExternalIdentifier" VARCHAR(50),
-    "InternalIdentifier" VARCHAR(50),
+    "Id" UUID,
+	"InternalIdentifier" VARCHAR(12),
+    "ExternalIdentifier" VARCHAR(50),    
     "Name" VARCHAR(150),
 	"Email" VARCHAR(150),
     "Role" VARCHAR(20),
@@ -125,8 +136,8 @@ BEGIN
     RETURN QUERY
 		SELECT
 			u."Id",
-			u."ExternalIdentifier",
 			u."InternalIdentifier",
+			u."ExternalIdentifier",			
 			u."Name",
 			u."Email",
 			u."Role",
@@ -142,19 +153,26 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION public."InsertCourse"(
-    p_UserId BIGINT,
+===================== FUNCTION: InsertCourse =====================
+
+
+CREATE OR REPLACE FUNCTION "InsertCourse"(
+	p_Id UUID,
+    p_InternalIdentifier VARCHAR(12),
+    p_UserId UUID,
     p_Name VARCHAR(150),
     p_Code VARCHAR(20),
     p_CreationDate TIMESTAMP,
     p_UpdateDate TIMESTAMP
 )
-RETURNS BIGINT
+RETURNS UUID
 AS $$
 DECLARE
-    new_id BIGINT;
+    new_id UUID;
 BEGIN
-    INSERT INTO public."Course" (
+    INSERT INTO "Course" (
+		"Id",
+        "InternalIdentifier",
         "UserId",
         "Name",
         "Code",
@@ -162,6 +180,8 @@ BEGIN
         "UpdateDate"
     )
     VALUES (
+		p_Id,
+        p_InternalIdentifier,
         p_UserId,
         p_Name,
         p_Code,
@@ -175,12 +195,15 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+===================== FUNCTION: GetCourseByCode =====================
+
+
 CREATE OR REPLACE FUNCTION "GetCourseByCode"(
     p_Code VARCHAR(20)
 )
 RETURNS TABLE (
-    "Id" BIGINT,
-    "UserId" BIGINT,
+    "Id" UUID,
+    "UserId" UUID,
     "Name" VARCHAR(150),
     "Code" VARCHAR(20),
     "CreationDate" TIMESTAMP,
@@ -205,13 +228,16 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+===================== FUNCTION: GetCourseMembersByCourseId =====================
+
+
 CREATE OR REPLACE FUNCTION "GetCourseMembersByCourseId"(
-    p_CourseId BIGINT
+    p_CourseId UUID
 )
 RETURNS TABLE (
-    "CourseId" BIGINT,
+    "CourseId" UUID,
 	"CourseName" VARCHAR(150),
-    "UserId" BIGINT,
+    "UserId" UUID,
     "UserName" VARCHAR(150),
     "UserIdentifier" VARCHAR(50),
     "EnrollmentDate" TIMESTAMP
@@ -239,15 +265,18 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+===================== FUNCTION: GetCoursesByUserId =====================
+
 
 CREATE OR REPLACE FUNCTION "GetCoursesByUserId"(
-    p_UserId BIGINT
+    p_UserId UUID
 )
 RETURNS TABLE (
-    "CourseId" BIGINT,
+    "CourseId" UUID,
+    "CourseIdentifier" VARCHAR(12),
     "CourseName" VARCHAR(150),
     "CourseCode" VARCHAR(50),
-    "UserId" BIGINT,
+    "UserId" UUID,
     "UserName" VARCHAR(150),
     "UserIdentifier" VARCHAR(50),
     "NumberOfMembers" BIGINT,
@@ -259,6 +288,7 @@ BEGIN
     RETURN QUERY
     SELECT
         c."Id" AS "CourseId",
+        c."InternalIdentifier" AS "CourseIdentifier",
         c."Name" AS "CourseName",
         c."Code" AS "CourseCode",
         u."Id" AS "UserId",
@@ -285,6 +315,7 @@ BEGIN
         )
     GROUP BY
         c."Id",
+        c."InternalIdentifier",
         c."Name",
         c."Code",
         u."Id",

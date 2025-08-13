@@ -44,6 +44,7 @@ public static class CourseMappingConfigurations
                     src.Courses!.Select(course => new CourseVO
                     {
                         CourseId = course.CourseId,
+                        CourseIdentifier = course.CourseIdentifier,
                         CourseName = course.CourseName,
                         CourseCode = course.CourseCode,
                         UserName = course.UserName,

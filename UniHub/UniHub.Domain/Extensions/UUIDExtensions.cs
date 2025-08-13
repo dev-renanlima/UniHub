@@ -4,6 +4,7 @@ namespace UniHub.Domain.Extensions;
 
 public static class UUIDExtensions
 {
+    private static readonly string defaultAuphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static readonly int defaultSize = 12;
 
     /// <summary>
@@ -12,7 +13,7 @@ public static class UUIDExtensions
     /// <returns>Um novo NanoId como string.</returns>
     public static string GenerateNanoId()
     {
-        return Nanoid.Generate(size: defaultSize);
+        return Nanoid.Generate(alphabet: defaultAuphabet, size: defaultSize);
     }
 
     /// <summary>

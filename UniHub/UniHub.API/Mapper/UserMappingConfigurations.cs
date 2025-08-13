@@ -14,7 +14,6 @@ namespace UniHub.API.Mapper
         {
             TypeAdapterConfig<CreateUserModel, UserDTO>
                     .NewConfig()
-                    .Map(dest => dest.InternalIdentifier, src => UUIDExtensions.GenerateNanoId())
                     .Map(dest => dest.ExternalIdentifier, src => src.Body!.ExternalIdentifier)
                     .Map(dest => dest.Name, src => src.Body!.Name)
                     .Map(dest => dest.Email, src => src.Body!.Email)
