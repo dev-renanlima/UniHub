@@ -16,8 +16,7 @@ jobs:
 
       #Step 02 - Build Docker image
       - name: Build Docker image
-        working-directory: UniHub/UniHub.API
-        run: docker build -t unihub-api:ci .
+        run: docker build -t unihub-api:ci -f UniHub/UniHub.API/Dockerfile .
             
       #Step 03 - Log in to Docker Hub
       - name: Log in to Docker Hub
