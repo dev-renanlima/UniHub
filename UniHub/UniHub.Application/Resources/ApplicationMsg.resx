@@ -124,12 +124,15 @@
     <value>Não foi encontrado nenhum usuário com o identificador informado: {0}</value>
   </data>
   <data name="USR0003" xml:space="preserve">
-    <value>O usuário não pode realizar esta ação</value>
+    <value>O usuário não pode realizar essa ação</value>
   </data>
   <data name="USR0004" xml:space="preserve">
     <value>O usuário já é um membro do curso solicitado</value>
   </data>
   <data name="CRS0001" xml:space="preserve">
     <value>Não foi encontrado nenhum curso com o código informado: {0}</value>
+  </data>
+  <data name="CRS0002" xml:space="preserve">
+    <value>Já existe um curso com os parâmetros informados</value>
   </data>
 </root>

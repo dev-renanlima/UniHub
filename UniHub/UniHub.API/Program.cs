@@ -1,4 +1,3 @@
-using Asp.Versioning;
 using UniHub.API.Conventions;
 using UniHub.API.Mapper;
 using UniHub.API.Middleware;
@@ -6,21 +5,7 @@ using UniHub.CrossCutting.Ioc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Versão API
-builder.Services.AddApiVersioning(options =>
-{
-    options.AssumeDefaultVersionWhenUnspecified = true;
-    options.DefaultApiVersion = new ApiVersion(1, 0);
-    options.ReportApiVersions = true;
-})
-.AddMvc()
-.AddApiExplorer(options =>
-{
-    options.GroupNameFormat = "'v'VVV";
-    options.SubstituteApiVersionInUrl = true;
-});
-
-// Serviços
+// Serviços essenciais
 builder.Services.AddControllers(options =>
 {
     options.Conventions.Add(new DefaultProducesConvention());
@@ -30,8 +15,11 @@ builder.Services.AddControllers(options =>
     options.JsonSerializerOptions.PropertyNamingPolicy = null;
 });
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// Versões da API e Swagger
+builder.Services.AddUniHubApiVersioning();
+builder.Services.AddUniHubSwagger();
+
+// Logging
 builder.Services.AddLogging();
 
 // AutoMapper
@@ -45,7 +33,7 @@ builder.Services.AddUniHubContext(builder.Configuration);
 builder.Services.AddUniHubServices();
 builder.Services.AddUniHubRepositories();
 
-// CORS liberado
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -58,11 +46,15 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Swagger UI
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "UniHub API v1");
+});
 
+// Middleware
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
-
 app.UseHttpsRedirection();
 
 // Ativa o CORS

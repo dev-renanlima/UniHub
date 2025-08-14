@@ -4,6 +4,6 @@ public record GetCoursesByUserResponseDTO
 (
     string? UserIdentifier,
     string? UserName,
-    int? NumberOfCourses,
+    long? NumberOfCourses,
     List<CourseByUserDTO> Courses    
 );

@@ -5,9 +5,9 @@ namespace UniHub.Domain.DTOs;
 public class 
     AssignmentAttachmentDTO
 {
-    public long? AssignmentId { get; set; }
+    public Guid? AssignmentId { get; set; }
 
-    public long? UserId { get; set; }
+    public Guid? UserId { get; set; }
 
     public string? Url { get; set; }
 

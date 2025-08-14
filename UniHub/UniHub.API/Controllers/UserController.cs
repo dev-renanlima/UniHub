@@ -20,7 +20,7 @@ public class UserController : ControllerBase
         _userService = userService;
     }
 
-    [HttpPost("createUser")]
+    [HttpPost("create")]
     public async Task<IActionResult> CreateUser(CreateUserModel createUserModel)
     {
         UserDTO userDTO = createUserModel.Adapt<UserDTO>();
@@ -30,10 +30,10 @@ public class UserController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, response);
     }
 
-    [HttpGet("getUserByExternalIdentifier/{externalIdentifier}")]
-    public async Task<IActionResult> GetUserByExternalIdentifier([FromRoute] string externalIdentifier)
+    [HttpGet("{identifier}")]
+    public async Task<IActionResult> GetUserByIdentifier([FromRoute] string identifier)
     {
-        GetUserResponseDTO? response = await _userService.GetUserByExternalIdentifierAsync(externalIdentifier);
+        GetUserResponseDTO? response = await _userService.GetUserByIdentifierAsync(identifier);
 
         return StatusCode(StatusCodes.Status200OK, response);
     }

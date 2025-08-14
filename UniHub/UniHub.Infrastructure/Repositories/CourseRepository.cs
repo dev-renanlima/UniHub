@@ -17,40 +17,48 @@ namespace UniHub.Infrastructure.Repositories
 
         public async Task<Course?> CreateAsync(Course course)
         {
-            using var command = _dbContext.CreateCommand();
+            course.SetDates();
 
-            command.CommandText = "SELECT public.\"InsertCourse\"(@p_UserId, @p_Name, @p_Code, @p_CreationDate, @p_UpdateDate)";
-            command.CommandType = CommandType.Text;
+            var parameters = new (string, object?)[]
+            {
+                ("p_Id", course.Id),
+                ("p_InternalIdentifier", course.InternalIdentifier),
+                ("p_UserId", course.UserId),
+                ("p_Name", course.Name),
+                ("p_Code", course.Code),
+                ("p_CreationDate", course.CreationDate),
+                ("p_UpdateDate", course.UpdateDate)
+            };
 
-            _dbContext.CreateParameter(command, "p_UserId", course.UserId);
-            _dbContext.CreateParameter(command, "p_Name", course.Name);
-            _dbContext.CreateParameter(command, "p_Code", course.Code);
-            _dbContext.CreateParameter(command, "p_CreationDate", DateTime.UtcNow);
-            _dbContext.CreateParameter(command, "p_UpdateDate", DateTime.UtcNow);
+            using var command = _dbContext.CreateFunctionCommand(functionName: "InsertCourse", parameters);
 
             var result = await command.ExecuteScalarAsync();
 
-            course.SetIdentity((long)result!);
+            course.SetIdentity((Guid)result!);
 
             return course;
         }
 
         public async Task<CourseMember?> CreateCourseMemberAsync(CourseMember courseMember)
         {
-            using var command = _dbContext.CreateCommand();
+            courseMember.SetDates();
 
-            command.CommandText = "SELECT public.\"InsertCourseMember\"(@p_CourseId, @p_UserId, @p_EnrollmentDate, @p_CreationDate, @p_UpdateDate)";
-            command.CommandType = CommandType.Text;
+            var parameters = new (string, object?)[]
+            {
+                ("p_Id", courseMember.Id),
+                ("p_InternalIdentifier", courseMember.InternalIdentifier),
+                ("p_CourseId", courseMember.CourseId),
+                ("p_UserId", courseMember.UserId),
+                ("p_EnrollmentDate", courseMember.EnrollmentDate),
+                ("p_CreationDate", courseMember.CreationDate),
+                ("p_UpdateDate", courseMember.UpdateDate)
+            };
 
-            _dbContext.CreateParameter(command, "p_CourseId", courseMember.CourseId);
-            _dbContext.CreateParameter(command, "p_UserId", courseMember.UserId);
-            _dbContext.CreateParameter(command, "p_EnrollmentDate", DateTime.UtcNow);
-            _dbContext.CreateParameter(command, "p_CreationDate", DateTime.UtcNow);
-            _dbContext.CreateParameter(command, "p_UpdateDate", DateTime.UtcNow);
+            using var command = _dbContext.CreateFunctionCommand(functionName: "InsertCourseMember", parameters);
 
             var result = await command.ExecuteScalarAsync();
 
-            courseMember.SetIdentity((long)result!);
+            courseMember.SetIdentity((Guid)result!);
 
             return courseMember;
         }
@@ -60,15 +68,14 @@ namespace UniHub.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<Course?> GetCourseByCodeAsync(string code)
+        public async Task<Course?> GetCourseByCodeAsync(string? code)
         {
-            using var command = _dbContext.CreateCommand();
+            var parameters = new (string, object?)[]
+            {
+                ("p_Code", code)
+            };
 
-            command.CommandText = "SELECT * FROM public.\"GetCourseByCode\"(@p_Code)";
-            command.CommandType = CommandType.Text;
-            command.Transaction = _dbContext.CurrentTransaction;
-
-            _dbContext.CreateParameter(command, "p_Code", code);
+            using var command = _dbContext.CreateFunctionCommand(functionName: "GetCourseByCode", parameters);
 
             using var reader = await command.ExecuteReaderAsync();
 
@@ -78,8 +85,9 @@ namespace UniHub.Infrastructure.Repositories
             {
                 course = new Course
                 {
-                    Id = reader["Id"] is DBNull ? null : (long?)reader["Id"],
-                    UserId = reader["UserId"] is DBNull ? null : (long?)reader["UserId"],
+                    Id = (Guid)reader["Id"],
+                    InternalIdentifier = (string)reader["InternalIdentifier"],
+                    UserId = reader["UserId"] is DBNull ? null : (Guid?)reader["UserId"],
                     Name = reader["Name"] is DBNull ? null : (string)reader["Name"],
                     Code = reader["Code"] is DBNull ? null : (string)reader["Code"],
                     CreationDate = reader["CreationDate"] is DBNull ? null : (DateTime?)reader["CreationDate"],
@@ -90,28 +98,34 @@ namespace UniHub.Infrastructure.Repositories
             return course;
         }
 
-        public async Task<List<Course>?> GetCoursesByUserAsync(long? userId)
+        public async Task<List<CourseVO>?> GetCoursesByUserIdAsync(Guid? userId)
         {
-            using var command = _dbContext.CreateCommand();
+            var parameters = new (string, object?)[]
+            {
+                ("p_UserId", userId)
+            };
 
-            command.CommandText = "SELECT * FROM public.\"GetCoursesByUserId\"(@p_UserId)";
-            command.CommandType = CommandType.Text;
-            command.Transaction = _dbContext.CurrentTransaction;
-
-            _dbContext.CreateParameter(command, "p_UserId", userId);
+            using var command = _dbContext.CreateFunctionCommand(functionName: "GetCoursesByUserId", parameters);
 
             using var reader = await command.ExecuteReaderAsync();
 
-            List<Course>? courses = [];
+            List<CourseVO>? courses = [];
 
             while (await reader.ReadAsync())
             {
                 courses.Add(
-                    new Course
+                    new CourseVO
                     {
-                        Id = reader["Id"] is DBNull ? null : (long?)reader["Id"],
-                        Name = reader["Name"] is DBNull ? null : (string)reader["Name"],
-                        Code = reader["Code"] is DBNull ? null : (string)reader["Code"]
+                        CourseId = reader["CourseId"] is DBNull ? null : (Guid?)reader["CourseId"],
+                        CourseIdentifier = reader["CourseIdentifier"] is DBNull ? null : (string)reader["CourseIdentifier"],
+                        CourseName = reader["CourseName"] is DBNull ? null : (string)reader["CourseName"],
+                        CourseCode = reader["CourseCode"] is DBNull ? null : (string)reader["CourseCode"],
+                        UserId = reader["UserId"] is DBNull ? null : (Guid?)reader["UserId"],
+                        UserName = reader["UserName"] is DBNull ? null : (string)reader["UserName"],
+                        UserIdentifier = reader["UserIdentifier"] is DBNull ? null : (string)reader["UserIdentifier"],
+                        NumberOfMembers = reader["NumberOfMembers"] is DBNull ? null : (long?)reader["NumberOfMembers"],
+                        CreationDate = reader["CreationDate"] is DBNull ? null : (DateTime?)reader["CreationDate"],
+                        UpdateDate = reader["UpdateDate"] is DBNull ? null : (DateTime?)reader["UpdateDate"]
                     }
                 );
             }
@@ -119,15 +133,14 @@ namespace UniHub.Infrastructure.Repositories
             return courses;
         }
 
-        public async Task<List<CourseMemberVO>?> GetCourseMembersByCourseAsync(long? courseId)
+        public async Task<List<CourseMemberVO>?> GetCourseMembersByCourseIdAsync(Guid? courseId)
         {
-            using var command = _dbContext.CreateCommand();
+            var parameters = new (string, object?)[]
+            {
+                ("p_CourseId", courseId)
+            };
 
-            command.CommandText = "SELECT * FROM public.\"GetCourseMembersByCourseId\"(@p_CourseId)";
-            command.CommandType = CommandType.Text;
-            command.Transaction = _dbContext.CurrentTransaction;
-
-            _dbContext.CreateParameter(command, "p_CourseId", courseId);
+            using var command = _dbContext.CreateFunctionCommand(functionName: "GetCourseMembersByCourseId", parameters);
 
             using var reader = await command.ExecuteReaderAsync();
 
@@ -138,11 +151,11 @@ namespace UniHub.Infrastructure.Repositories
                 courseMembers.Add(
                     new CourseMemberVO
                     {
-                        CourseId = reader["CourseId"] is DBNull ? null : (long?)reader["CourseId"],
+                        CourseId = reader["CourseId"] is DBNull ? null : (Guid?)reader["CourseId"],
                         CourseName = reader["CourseName"] is DBNull ? null : (string?)reader["CourseName"],
-                        UserId = reader["UserId"] is DBNull ? null : (long?)reader["UserId"],
-                        UserName = reader["UserName"] is DBNull ? null : (string?)reader["UserName"],
+                        UserId = reader["UserId"] is DBNull ? null : (Guid?)reader["UserId"],
                         UserIdentifier = reader["UserIdentifier"] is DBNull ? null : (string?)reader["UserIdentifier"],
+                        UserName = reader["UserName"] is DBNull ? null : (string?)reader["UserName"],
                         EnrollmentDate = reader["EnrollmentDate"] is DBNull ? null : (DateTime?)reader["EnrollmentDate"]
                     }
                 );

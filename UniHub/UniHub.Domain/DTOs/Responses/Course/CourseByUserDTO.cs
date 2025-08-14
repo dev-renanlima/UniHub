@@ -2,7 +2,11 @@
 
 public class CourseByUserDTO
 {
-    public long CourseId { get; set; }
-    public string? Name { get; set; }
-    public string? Code { get; set; }
+    public string? CourseIdentifier { get; set; }
+    public string? CourseName { get; set; }
+    public string? CourseCode { get; set; }
+    public string? UserName { get; set; }
+    public int? NumberOfMembers { get; set; }
+    public DateTime? CreationDate { get; set; }
+    public DateTime? UpdateDate { get; set; }
 }

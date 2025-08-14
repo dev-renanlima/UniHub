@@ -2,8 +2,12 @@
 
 public record CreateUserResponseDTO
 (
-    long? Id,
+    string? InternalIdentifier,
     string? ExternalIdentifier,
     string? Name,
-    string? Role
+    string? Email,
+    int? Role,
+    int? Status,
+    string? ProfileUrl,
+    DateTime? CreationDate
 );

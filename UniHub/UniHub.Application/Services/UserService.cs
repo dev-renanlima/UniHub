@@ -37,7 +37,7 @@ namespace UniHub.Application.Services
             {
                 _unitOfWork.Rollback();
 
-                throw new HttpRequestFailException(nameof(ApplicationMsg.USR0001), ApplicationMsg.USR0001, HttpStatusCode.BadRequest);
+                throw new HttpRequestFailException(nameof(ApplicationMsg.USR0001), ApplicationMsg.USR0001, HttpStatusCode.Conflict);
             }
             catch (Exception)
             {
@@ -47,12 +47,33 @@ namespace UniHub.Application.Services
             }
         }
 
-        public async Task<GetUserResponseDTO> GetUserByExternalIdentifierAsync(string externalIdentifier)
+        public async Task<GetUserResponseDTO> GetUserByIdentifierAsync(string identifier)
         {
             try
             {
-                User? user = await _unitOfWork.UserRepository.GetUserByExternalIdentifierAsync(externalIdentifier)
-                    ?? throw new HttpRequestFailException(nameof(ApplicationMsg.USR0002), string.Format(ApplicationMsg.USR0002, externalIdentifier), HttpStatusCode.NotFound);
+                User? user = await _unitOfWork.UserRepository.GetUserByIdentifierAsync(identifier)
+                    ?? throw new HttpRequestFailException(nameof(ApplicationMsg.USR0002), string.Format(ApplicationMsg.USR0002, identifier), HttpStatusCode.NotFound);
+
+                _unitOfWork.Commit();
+
+                GetUserResponseDTO? getUserResponseDTO = user.Adapt<GetUserResponseDTO>();
+
+                return getUserResponseDTO;
+            }
+            catch (Exception)
+            {
+                _unitOfWork.Rollback();
+
+                throw;
+            }
+        }
+
+        public async Task<GetUserResponseDTO> GetUserByIdAsync(Guid? userId)
+        {
+            try
+            {
+                User? user = await _unitOfWork.UserRepository.GetUserByIdAsync(userId)
+                    ?? throw new HttpRequestFailException(nameof(ApplicationMsg.USR0002), string.Format(ApplicationMsg.USR0002, userId), HttpStatusCode.NotFound);
 
                 _unitOfWork.Commit();
 

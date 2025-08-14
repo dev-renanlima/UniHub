@@ -3,7 +3,9 @@
 public record AddCourseMemberResponseDTO
 (
     string? UserIdentifier,
-    long? CourseId,
+    string? UserName,
+    string? CourseIdentifier,
     string? CourseName,
+    string? CourseCode,
     DateTime? EnrollmentDate
 );

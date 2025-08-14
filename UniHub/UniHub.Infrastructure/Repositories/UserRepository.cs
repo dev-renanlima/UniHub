@@ -17,38 +17,39 @@ namespace UniHub.Infrastructure.Repositories
 
         public async Task<User?> CreateAsync(User user)
         {
-            using var command = _dbContext.CreateCommand();
+            user.SetDates();
 
-            command.CommandText = "SELECT public.\"InsertUser\"(@p_ExternalIdentifier, @p_Role, @p_Name, @p_CreationDate, @p_UpdateDate)";
-            command.CommandType = CommandType.Text;
+            var parameters = new (string, object?)[]
+            {
+                ("p_Id", user.Id),
+                ("p_InternalIdentifier", user.InternalIdentifier),
+                ("p_ExternalIdentifier", user.ExternalIdentifier),
+                ("p_Name", user.Name),
+                ("p_Email", user.Email),
+                ("p_Role", user.Role.ToString()),
+                ("p_Status", user.Status.ToString()),
+                ("p_ProfileUrl", user.ProfileUrl),
+                ("p_CreationDate", user.CreationDate),
+                ("p_UpdateDate", user.UpdateDate)
+            };
 
-            _dbContext.CreateParameter(command, "p_ExternalIdentifier", user.ExternalIdentifier);
-            _dbContext.CreateParameter(command, "p_Role", user.Role.ToString());
-            _dbContext.CreateParameter(command, "p_Name", user.Name);
-            _dbContext.CreateParameter(command, "p_CreationDate", DateTime.UtcNow);
-            _dbContext.CreateParameter(command, "p_UpdateDate", DateTime.UtcNow);
+            using var command = _dbContext.CreateFunctionCommand(functionName: "InsertUser", parameters);
 
             var result = await command.ExecuteScalarAsync();
 
-            user.SetIdentity((long)result!);
+            user.SetIdentity((Guid)result!);
 
             return user;
         } 
 
-        public Task<List<User>> GetAllUsersAsync()
+        public async Task<User?> GetUserByIdentifierAsync(string identifier)
         {
-            throw new NotImplementedException();
-        }
+            var parameters = new (string, object?)[]
+            {
+                ("p_Identifier", identifier),
+            };
 
-        public async Task<User?> GetUserByExternalIdentifierAsync(string externalIdentifier)
-        {
-            using var command = _dbContext.CreateCommand();
-
-            command.CommandText = "SELECT * FROM public.\"GetUserByExternalIdentifier\"(@p_ExternalIdentifier)";
-            command.CommandType = CommandType.Text;
-            command.Transaction = _dbContext.CurrentTransaction;
-
-            _dbContext.CreateParameter(command, "p_ExternalIdentifier", externalIdentifier);
+            using var command = _dbContext.CreateFunctionCommand(functionName: "GetUserByIdentifier", parameters);
 
             using var reader = await command.ExecuteReaderAsync();
 
@@ -58,10 +59,14 @@ namespace UniHub.Infrastructure.Repositories
             {
                 user = new User
                 {
-                    Id = reader["Id"] is DBNull ? null : (long?)reader["Id"],
+                    Id = (Guid)reader["Id"],
+                    InternalIdentifier = (string)reader["InternalIdentifier"],
                     ExternalIdentifier = reader["ExternalIdentifier"] is DBNull ? null : (string)reader["ExternalIdentifier"],
                     Name = reader["Name"] is DBNull ? null : (string)reader["Name"],
+                    Email = reader["Email"] is DBNull ? null : (string)reader["Email"],
                     Role = Enum.Parse<UserRole>((string)reader["Role"]),
+                    Status = Enum.Parse<UserStatus>((string)reader["Status"]),
+                    ProfileUrl = reader["ProfileUrl"] is DBNull ? null : (string)reader["ProfileUrl"],
                     CreationDate = reader["CreationDate"] is DBNull ? null : (DateTime?)reader["CreationDate"],
                     UpdateDate = reader["UpdateDate"] is DBNull ? null : (DateTime?)reader["UpdateDate"]
                 };
@@ -70,9 +75,37 @@ namespace UniHub.Infrastructure.Repositories
             return user;
         }
 
-        public Task<User?> GetUserByIdAsync(int id)
+        public async Task<User?> GetUserByIdAsync(Guid? userId)
         {
-            throw new NotImplementedException();
+            var parameters = new (string, object?)[]
+            {
+                ("p_Id", userId),
+            };
+
+            using var command = _dbContext.CreateFunctionCommand(functionName: "GetUserById", parameters);
+
+            using var reader = await command.ExecuteReaderAsync();
+
+            User? user = null;
+
+            if (await reader.ReadAsync())
+            {
+                user = new User
+                {
+                    Id = (Guid)reader["Id"],
+                    InternalIdentifier = (string)reader["InternalIdentifier"],
+                    ExternalIdentifier = reader["ExternalIdentifier"] is DBNull ? null : (string)reader["ExternalIdentifier"],
+                    Name = reader["Name"] is DBNull ? null : (string)reader["Name"],
+                    Email = reader["Email"] is DBNull ? null : (string)reader["Email"],
+                    Role = Enum.Parse<UserRole>((string)reader["Role"]),
+                    Status = Enum.Parse<UserStatus>((string)reader["Status"]),
+                    ProfileUrl = reader["ProfileUrl"] is DBNull ? null : (string)reader["ProfileUrl"],
+                    CreationDate = reader["CreationDate"] is DBNull ? null : (DateTime?)reader["CreationDate"],
+                    UpdateDate = reader["UpdateDate"] is DBNull ? null : (DateTime?)reader["UpdateDate"]
+                };
+            }
+
+            return user;
         }
     }
 }

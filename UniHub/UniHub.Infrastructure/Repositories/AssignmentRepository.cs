@@ -31,7 +31,7 @@ namespace UniHub.Infrastructure.Repositories
 
             var result = await command.ExecuteScalarAsync();
 
-            assignment.SetIdentity((long)result!);
+            assignment.SetIdentity((Guid)result!);
 
             return assignment;
         }
@@ -52,7 +52,7 @@ namespace UniHub.Infrastructure.Repositories
 
             var result = await command.ExecuteScalarAsync();
 
-            assignmentAttachment.SetIdentity((long)result!);
+            assignmentAttachment.SetIdentity((Guid)result!);
 
             return assignmentAttachment;
         }
