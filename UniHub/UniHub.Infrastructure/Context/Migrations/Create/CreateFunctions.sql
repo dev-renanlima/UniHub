@@ -203,6 +203,7 @@ CREATE OR REPLACE FUNCTION "GetCourseByCode"(
 )
 RETURNS TABLE (
     "Id" UUID,
+    "InternalIdentifier" VARCHAR(12),
     "UserId" UUID,
     "Name" VARCHAR(150),
     "Code" VARCHAR(20),
@@ -214,6 +215,7 @@ BEGIN
     RETURN QUERY
     SELECT
         c."Id",
+        c."InternalIdentifier",
         c."UserId",
         c."Name",
         c."Code",
@@ -291,39 +293,86 @@ BEGIN
         c."InternalIdentifier" AS "CourseIdentifier",
         c."Name" AS "CourseName",
         c."Code" AS "CourseCode",
-        u."Id" AS "UserId",
-        u."Name" AS "UserName",
-        u."ExternalIdentifier" AS "UserIdentifier",
+        uc."Id" AS "UserId",
+        uc."Name" AS "UserName",
+        uc."ExternalIdentifier" AS "UserIdentifier",
         COUNT(cm."Id") AS "NumberOfMembers",
         c."CreationDate",
         c."UpdateDate"
     FROM
         "Course" c
-        INNER JOIN "User" u ON u."Id" = p_UserId
+        INNER JOIN "User" uc ON uc."Id" = c."UserId" 
         LEFT JOIN "CourseMember" cm ON cm."CourseId" = c."Id"
     WHERE
         c."DeletionDate" IS NULL
-        AND u."DeletionDate" IS NULL
+        AND uc."DeletionDate" IS NULL
         AND (
-            c."UserId" = p_UserId -- ADMIN
+            -- professor do curso
+            c."UserId" = p_UserId
+            -- ou aluno inscrito no curso
             OR EXISTS (
                 SELECT 1
                 FROM "CourseMember" cme
+                INNER JOIN "User" u ON u."Id" = cme."UserId"
                 WHERE cme."CourseId" = c."Id"
                   AND cme."UserId" = p_UserId
-            ) -- MEMBER
+                  AND u."DeletionDate" IS NULL
+            )
         )
     GROUP BY
         c."Id",
         c."InternalIdentifier",
         c."Name",
         c."Code",
-        u."Id",
-        u."Name",
-        u."ExternalIdentifier",
+        uc."Id",
+        uc."Name",
+        uc."ExternalIdentifier",
         c."CreationDate",
         c."UpdateDate";
 END;
 $$ LANGUAGE plpgsql;
+
+
+===================== FUNCTION: InsertCourseMember =====================
+
+
+CREATE OR REPLACE FUNCTION public."InsertCourseMember"(
+	p_Id UUID,
+    p_InternalIdentifier VARCHAR(12),
+    p_CourseId UUID,
+	p_UserId UUID,
+	p_EnrollmentDate TIMESTAMP,
+    p_CreationDate TIMESTAMP,
+    p_UpdateDate TIMESTAMP
+)
+RETURNS UUID
+AS $$
+DECLARE
+    new_id UUID;
+BEGIN
+    INSERT INTO public."CourseMember" (
+		"Id",
+		"InternalIdentifier",
+        "CourseId",
+        "UserId",
+        "EnrollmentDate",
+        "CreationDate",
+        "UpdateDate"
+    )
+    VALUES (
+		p_Id,
+		p_InternalIdentifier,
+		p_CourseId,
+        p_UserId,
+        p_EnrollmentDate,
+        p_CreationDate,
+        p_UpdateDate
+    )
+    RETURNING "Id" INTO new_id;
+
+    RETURN new_id;
+END;
+$$ LANGUAGE plpgsql;
+
 
 */

@@ -58,7 +58,7 @@ public static class CourseMappingConfigurations
         #region Course - GetCoursesByCode
         TypeAdapterConfig<Course, GetCourseResponseDTO>
             .NewConfig()
-                .Map(dest => dest.CourseId, src => src.Id!);
+                .Map(dest => dest.CourseIdentifier, src => src.InternalIdentifier!);
         #endregion        
     }
 }

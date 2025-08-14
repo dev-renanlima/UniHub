@@ -29,7 +29,7 @@ public static class AssignmentMappingConfigurations
 
         TypeAdapterConfig<(GetCourseResponseDTO Course, GetUserResponseDTO User, AssignmentDTO Assignment), Assignment>
             .NewConfig()
-                .Map(dest => dest.CourseId, src => src.Course.CourseId)
+                .Map(dest => dest.CourseId, src => src.Course.Id)
                 .Map(dest => dest.Course, src => src.Course)
                 .Map(dest => dest.UserId, src => src.User.Id)
                 .Map(dest => dest.User, src => src.User)

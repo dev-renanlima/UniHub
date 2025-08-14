@@ -86,6 +86,7 @@ namespace UniHub.Infrastructure.Repositories
                 course = new Course
                 {
                     Id = (Guid)reader["Id"],
+                    InternalIdentifier = (string)reader["InternalIdentifier"],
                     UserId = reader["UserId"] is DBNull ? null : (Guid?)reader["UserId"],
                     Name = reader["Name"] is DBNull ? null : (string)reader["Name"],
                     Code = reader["Code"] is DBNull ? null : (string)reader["Code"],

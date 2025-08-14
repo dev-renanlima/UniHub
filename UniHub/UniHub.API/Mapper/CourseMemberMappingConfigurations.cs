@@ -12,7 +12,7 @@ public static class CourseMemberMappingConfigurations
 {
     public static void RegisterCourseMemberMaps(this IServiceCollection services)
     {
-        #region Course - Member
+        #region Course - Add Member
         TypeAdapterConfig<AddMemberByCodeModel, CourseMemberDTO>
             .NewConfig()
                 .Map(dest => dest.UserIdentifier, src => src.Body!.UserIdentifier)
@@ -20,8 +20,14 @@ public static class CourseMemberMappingConfigurations
 
         TypeAdapterConfig<(GetCourseResponseDTO Course, GetUserResponseDTO User), CourseMember>
             .NewConfig()
-                .Map(dest => dest.CourseId, src => src.Course.CourseId)
-                .Map(dest => dest.Course, src => src.Course)
+                .Map(dest => dest.CourseId, src => src.Course.Id)
+                .Map(dest => dest.Course, src => new Course // Temporário
+                    { 
+                        Id = src.Course.Id,
+                        InternalIdentifier = src.Course.CourseIdentifier!,
+                        Name = src.Course.CourseName,
+                        Code = src.Course.CourseCode
+                    })
                 .Map(dest => dest.UserId, src => src.User.Id)
                 .Map(dest => dest.User, src => src.User)
                 .Map(dest => dest.EnrollmentDate, src => DateTime.UtcNow);
@@ -29,15 +35,18 @@ public static class CourseMemberMappingConfigurations
         TypeAdapterConfig<CourseMember, AddCourseMemberResponseDTO>
             .NewConfig()
                 .Map(dest => dest.UserIdentifier, src => src.User.ExternalIdentifier)
-                .Map(dest => dest.CourseId, src => src.CourseId)
+                .Map(dest => dest.UserName, src => src.User.Name)
+                .Map(dest => dest.CourseIdentifier, src => src.Course.InternalIdentifier)
                 .Map(dest => dest.CourseName, src => src.Course.Name)
+                .Map(dest => dest.CourseCode, src => src.Course.Code)
                 .Map(dest => dest.EnrollmentDate, src => src.EnrollmentDate);
         #endregion
 
         #region Course - GetMembersByCourseCode
         TypeAdapterConfig<(Course Course, GetUserResponseDTO User, List<CourseMemberVO> CourseMembers), GetCourseResponseDTO>
             .NewConfig()
-                .Map(dest => dest.CourseId, src => src.Course.Id!)
+                .Map(dest => dest.Id, src => src.Course.Id!)
+                .Map(dest => dest.CourseIdentifier, src => src.Course.InternalIdentifier!)
                 .Map(dest => dest.CourseName, src => src.Course.Name!)
                 .Map(dest => dest.CourseCode, src => src.Course.Code!)
                 .Map(dest => dest.UserIdentifier, src => src.User.ExternalIdentifier!)

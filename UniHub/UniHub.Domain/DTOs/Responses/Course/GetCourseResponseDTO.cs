@@ -1,8 +1,13 @@
-﻿namespace UniHub.Domain.DTOs.Responses.Course;
+﻿using System.Text.Json.Serialization;
 
-public class GetCourseResponseDTO
+namespace UniHub.Domain.DTOs.Responses.Course;
+
+public record GetCourseResponseDTO
 {
-    public long CourseId { get; set; }
+    [JsonIgnore]
+    public Guid Id { get; set; }
+
+    public string? CourseIdentifier { get; set; }
     public string? CourseName { get; set; }
     public string? CourseCode { get; set; }
     public string? UserName { get; set; }
