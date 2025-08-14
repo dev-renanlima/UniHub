@@ -20,7 +20,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/unihub-api:latest -f ./UniHub.API/Dockerfile .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/unihub-api:latest -f ./UniHub.API/Dockerfile ./UniHub.API
 
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/unihub-api:latest
