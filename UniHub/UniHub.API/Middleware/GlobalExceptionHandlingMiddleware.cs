@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
-using UniHub.API.Model;
 using UniHub.API.Resources;
+using UniHub.API.Responses;
 using UniHub.Application.Exceptions;
 
 namespace UniHub.API.Middleware;
@@ -27,9 +26,9 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
             ProblemResponse problem = new()
             {
                 StatusCode = (int)ex.StatusCode,
-                ErrorCode = ex.ErrorCode,
+                ErrorCode = ex.ErrorCode!,
                 Detail = ex.Message,
-                CorrelationId = ex.CorrelationId
+                CorrelationId = ex.CorrelationId!
             };
 
             context.Response.ContentType = "application/json";

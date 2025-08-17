@@ -15,6 +15,4 @@ public class User : BaseEntity
     public UserStatus Status { get; set; }
 
     public string? ProfileUrl { get; set; }
-
-    public List<CourseMember> Courses { get; set; } = new();
 }

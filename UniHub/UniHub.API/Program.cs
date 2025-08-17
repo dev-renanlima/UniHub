@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using UniHub.API.Conventions;
 using UniHub.API.Mapper;
 using UniHub.API.Middleware;
@@ -13,6 +14,7 @@ builder.Services.AddControllers(options =>
 .AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNamingPolicy = null;
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
 // Versões da API e Swagger

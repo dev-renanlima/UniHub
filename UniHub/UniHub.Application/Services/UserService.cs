@@ -4,7 +4,6 @@ using System.Net;
 using UniHub.Application.Exceptions;
 using UniHub.Application.Resources;
 using UniHub.Domain.DTOs;
-using UniHub.Domain.DTOs.Responses.User;
 using UniHub.Domain.Entities;
 using UniHub.Domain.Interfaces.Repositories;
 using UniHub.Domain.Interfaces.Services;
@@ -20,7 +19,7 @@ namespace UniHub.Application.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<CreateUserResponseDTO> CreateAsync(UserDTO userDTO)
+        public async Task<UserDTO> CreateAsync(UserDTO userDTO)
         {
             try
             {
@@ -29,9 +28,9 @@ namespace UniHub.Application.Services
                 await _unitOfWork.UserRepository.CreateAsync(user!);
                 _unitOfWork.Commit();
 
-                CreateUserResponseDTO? createUserResponseDTO = user.Adapt<CreateUserResponseDTO>();
+                UserDTO createdUser = user.Adapt<UserDTO>();
 
-                return createUserResponseDTO;
+                return createdUser;
             }
             catch (PostgresException ex) when (ex.SqlState == PostgresErrorCodes.UniqueViolation)
             {
@@ -47,7 +46,7 @@ namespace UniHub.Application.Services
             }
         }
 
-        public async Task<GetUserResponseDTO> GetUserByIdentifierAsync(string identifier)
+        public async Task<UserDTO> GetUserByIdentifierAsync(string identifier)
         {
             try
             {
@@ -56,9 +55,9 @@ namespace UniHub.Application.Services
 
                 _unitOfWork.Commit();
 
-                GetUserResponseDTO? getUserResponseDTO = user.Adapt<GetUserResponseDTO>();
+                UserDTO userDTO = user.Adapt<UserDTO>();
 
-                return getUserResponseDTO;
+                return userDTO;
             }
             catch (Exception)
             {
@@ -68,7 +67,7 @@ namespace UniHub.Application.Services
             }
         }
 
-        public async Task<GetUserResponseDTO> GetUserByIdAsync(Guid? userId)
+        public async Task<UserDTO> GetUserByIdAsync(Guid? userId)
         {
             try
             {
@@ -77,9 +76,9 @@ namespace UniHub.Application.Services
 
                 _unitOfWork.Commit();
 
-                GetUserResponseDTO? getUserResponseDTO = user.Adapt<GetUserResponseDTO>();
+                UserDTO userDTO = user.Adapt<UserDTO>();
 
-                return getUserResponseDTO;
+                return userDTO;
             }
             catch (Exception)
             {

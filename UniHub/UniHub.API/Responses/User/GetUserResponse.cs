@@ -1,9 +1,8 @@
 ﻿using UniHub.Domain.Enums;
 
-namespace UniHub.Domain.DTOs;
+namespace UniHub.API.Responses.User;
 
-public record UserDTO(
-    Guid Id,
+public record GetUserResponse(
     string InternalIdentifier,
     string ExternalIdentifier,
     string Name,
@@ -12,5 +11,6 @@ public record UserDTO(
     UserStatus Status,
     string? ProfileUrl,
     DateTime CreationDate,
-    DateTime UpdateDate
+    DateTime? UpdateDate
 );
+

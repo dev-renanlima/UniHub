@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using UniHub.CrossCutting.Extensions;
 
 namespace UniHub.CrossCutting.Ioc;
 
@@ -27,6 +28,8 @@ public static class SwaggerExtensions
                      Url = new Uri("https://www.linkedin.com/in/dev-renanlima/")
                 }
             });
+
+            c.SchemaFilter<EnumSchemaFilter>();
 
             var xmlFile = "UniHub.API.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
