@@ -1,8 +1,8 @@
 ﻿using Asp.Versioning;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
-using UniHub.API.Requests.User;
-using UniHub.API.Responses.User;
+using UniHub.API.Requests;
+using UniHub.API.Responses;
 using UniHub.Domain.DTOs;
 using UniHub.Domain.Interfaces.Services;
 

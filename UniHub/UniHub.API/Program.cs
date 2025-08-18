@@ -1,3 +1,4 @@
+using Asp.Versioning.ApiExplorer;
 using System.Text.Json.Serialization;
 using UniHub.API.Conventions;
 using UniHub.API.Mapper;
@@ -16,6 +17,9 @@ builder.Services.AddControllers(options =>
     options.JsonSerializerOptions.PropertyNamingPolicy = null;
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
+
+// Autenticação e Autorização
+builder.Services.AddUniHubAuthentication(builder.Configuration);
 
 // Versões da API e Swagger
 builder.Services.AddUniHubApiVersioning();
@@ -48,21 +52,33 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Swagger UI
+// Swagger
+var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "UniHub API v1");
+    foreach (var desc in provider.ApiVersionDescriptions)
+    {
+        c.SwaggerEndpoint($"/swagger/{desc.GroupName}/swagger.json", $"UniHub API {desc.GroupName.ToUpperInvariant()}");
+    }
 });
 
-// Middleware
+// Middleware Exceções globais
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
+
+// Middleware API Key
+app.UseMiddleware<ApiKeyMiddleware>();
+
 app.UseHttpsRedirection();
 
 // Ativa o CORS
 app.UseCors("AllowAll");
 
+// Auth
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();

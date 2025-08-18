@@ -1,8 +1,8 @@
 ﻿using System.Net;
 using System.Text.Json;
-using UniHub.API.Resources;
 using UniHub.API.Responses;
 using UniHub.Application.Exceptions;
+using UniHub.Application.Resources;
 
 namespace UniHub.API.Middleware;
 
@@ -19,14 +19,14 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
         {
             await next(context);
         }
-        catch (HttpRequestFailException ex)
+        catch (ApiKeyAuthException ex)
         {
             _logger.LogWarning(ex, ex.Message);
 
             ProblemResponse problem = new()
             {
                 StatusCode = (int)ex.StatusCode,
-                ErrorCode = ex.ErrorCode!,
+                ErrorCode = ex.ErrorCode,
                 Detail = ex.Message,
                 CorrelationId = ex.CorrelationId!
             };
@@ -36,6 +36,23 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
 
             await context.Response.WriteAsync(JsonSerializer.Serialize(problem));
         }
+        catch (HttpRequestFailException ex)
+        {
+            _logger.LogWarning(ex, ex.Message);
+
+            ProblemResponse problem = new()
+            {
+                StatusCode = (int)ex.StatusCode,
+                ErrorCode = ex.ErrorCode,
+                Detail = ex.Message,
+                CorrelationId = ex.CorrelationId!
+            };
+
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)ex.StatusCode;
+
+            await context.Response.WriteAsync(JsonSerializer.Serialize(problem));
+        }        
         catch (Exception ex)
         {
 

@@ -1,7 +1,6 @@
-﻿using Asp.Versioning.ApiExplorer;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
-using UniHub.CrossCutting.Extensions;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using UniHub.CrossCutting.Options;
 
 namespace UniHub.CrossCutting.Ioc;
 
@@ -16,26 +15,14 @@ public static class SwaggerExtensions
 
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo
-            {
-                Title = $"UniHub.API",
-                Version = "v1",
-                Description = "Documentação da API UniHub",
-                Contact = new OpenApiContact
-                {
-                     Name = "Renan Lima",
-                     Email = "tech.renanlima@gmail.com",
-                     Url = new Uri("https://www.linkedin.com/in/dev-renanlima/")
-                }
-            });
-
-            c.SchemaFilter<EnumSchemaFilter>();
+            c.SchemaFilter<EnumSchemaFilterOptions>();
 
             var xmlFile = "UniHub.API.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-
             c.IncludeXmlComments(xmlPath);
         });
+
+        services.ConfigureOptions<SwaggerGenSetupOptions>();
 
         return services;
     }

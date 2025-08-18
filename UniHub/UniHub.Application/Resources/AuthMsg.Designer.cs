@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace UniHub.API.Resources {
+namespace UniHub.Application.Resources {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace UniHub.API.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class ApiMsg {
+    public class AuthMsg {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ApiMsg() {
+        internal AuthMsg() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace UniHub.API.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("UniHub.API.Resources.ApiMsg", typeof(ApiMsg).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("UniHub.Application.Resources.AuthMsg", typeof(AuthMsg).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,20 +61,20 @@ namespace UniHub.API.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Houve um erro no sistema. Tente novamente mais tarde..
+        ///   Looks up a localized string similar to É necessário informar a chave da API.
         /// </summary>
-        public static string API0001 {
+        public static string AUTH0001 {
             get {
-                return ResourceManager.GetString("API0001", resourceCulture);
+                return ResourceManager.GetString("AUTH0001", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to O campo {0} é obrigatório.
+        ///   Looks up a localized string similar to A chave da API informada é inválida.
         /// </summary>
-        public static string API0002 {
+        public static string AUTH0002 {
             get {
-                return ResourceManager.GetString("API0002", resourceCulture);
+                return ResourceManager.GetString("AUTH0002", resourceCulture);
             }
         }
     }

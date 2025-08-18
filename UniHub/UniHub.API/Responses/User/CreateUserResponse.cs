@@ -1,8 +1,9 @@
 ﻿using UniHub.Domain.Enums;
 
-namespace UniHub.API.Responses.User;
+namespace UniHub.API.Responses;
 
-public record CreateUserResponse(
+public record CreateUserResponse
+(
     string InternalIdentifier,
     string ExternalIdentifier,
     string Name,

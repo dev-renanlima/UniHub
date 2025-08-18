@@ -1,6 +1,6 @@
 ﻿using Mapster;
-using UniHub.API.Requests.User;
-using UniHub.API.Responses.User;
+using UniHub.API.Requests;
+using UniHub.API.Responses;
 using UniHub.Domain.DTOs;
 using UniHub.Domain.Entities;
 using UniHub.Domain.Enums;
