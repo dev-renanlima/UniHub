@@ -14,7 +14,6 @@ public static class PipelineExtensions
     public static IServiceCollection AddUniHubContext(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<ApplicationDbContext>(options =>
-            //options.UseSqlServer(configuration.GetConnectionString("UniHubConnection")));
             options.UseNpgsql(configuration.GetConnectionString("UniHubConnection")));
 
         return services;
@@ -31,7 +30,8 @@ public static class PipelineExtensions
     }
 
     public static IServiceCollection AddUniHubServices(this IServiceCollection services)
-    {        
+    {
+        services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<ICourseService, CourseService>();
         services.AddScoped<IAssignmentService, AssignmentService>();

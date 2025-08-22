@@ -3,10 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
 using System.Text;
 using UniHub.Application.Resources;
-using UniHub.Infrastructure.Authentication;
+using UniHub.Domain.Options;
 
 namespace UniHub.CrossCutting.OptionsSetup;
 
@@ -49,7 +48,7 @@ public class JwtBearerOptionsSetup : IConfigureOptions<JwtBearerOptions>
                 {
                     Status = StatusCodes.Status401Unauthorized,
                     Title = "Falha na autenticação",
-                    Detail = AuthMsg.AUTH0004
+                    Detail = AuthMsg.InvalidJwtToken
                 };
 
                 return context.Response.WriteAsJsonAsync(problem);
@@ -65,7 +64,7 @@ public class JwtBearerOptionsSetup : IConfigureOptions<JwtBearerOptions>
                 {
                     Status = StatusCodes.Status401Unauthorized,
                     Title = "Não autorizado",
-                    Detail = AuthMsg.AUTH0003
+                    Detail = AuthMsg.ExpiredJwtToken
                 };
 
                 return context.Response.WriteAsJsonAsync(problem);
@@ -79,7 +78,7 @@ public class JwtBearerOptionsSetup : IConfigureOptions<JwtBearerOptions>
                 {
                     Status = StatusCodes.Status403Forbidden,
                     Title = "Acesso negado",
-                    Detail = AuthMsg.AUTH0005
+                    Detail = AuthMsg.BlockedResource
                 };
 
                 return context.Response.WriteAsJsonAsync(problem);

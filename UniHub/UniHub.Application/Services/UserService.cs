@@ -1,10 +1,10 @@
 ﻿using Mapster;
 using Npgsql;
 using System.Net;
-using UniHub.Application.Exceptions;
 using UniHub.Application.Resources;
 using UniHub.Domain.DTOs;
 using UniHub.Domain.Entities;
+using UniHub.Domain.Exceptions;
 using UniHub.Domain.Interfaces.Repositories;
 using UniHub.Domain.Interfaces.Services;
 

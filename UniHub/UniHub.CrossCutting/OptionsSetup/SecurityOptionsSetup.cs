@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using UniHub.Infrastructure.Authentication;
+using UniHub.Domain.Options;
 
 namespace UniHub.CrossCutting.OptionsSetup;
 

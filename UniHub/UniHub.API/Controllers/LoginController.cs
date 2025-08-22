@@ -17,12 +17,12 @@ namespace UniHub.API.Controllers;
 public class LoginController : ControllerBase
 {
     private readonly IUserService _userService;
-    private readonly IJwtProvider _jwtProvider;
+    private readonly ITokenService _tokenService;
 
-    public LoginController(IUserService userService, IJwtProvider jwtProvider)
+    public LoginController(IUserService userService, ITokenService tokenService)
     {
         _userService = userService;
-        _jwtProvider = jwtProvider;
+        _tokenService = tokenService;
     }
 
     [HttpPost("login")]
@@ -38,7 +38,7 @@ public class LoginController : ControllerBase
 
         GetUserResponse userResponse = userDTO.Adapt<GetUserResponse>();
 
-        string token = _jwtProvider.GenerateToken(userDTO);
+        string token = _tokenService.GenerateToken(userDTO);
 
         LoginResponse response = (userResponse, token).Adapt<LoginResponse>();
         

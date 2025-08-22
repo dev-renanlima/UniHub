@@ -4,9 +4,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
-using UniHub.Application.Exceptions;
 using UniHub.Application.Resources;
-using UniHub.Infrastructure.Authentication;
+using UniHub.Domain.Exceptions;
+using UniHub.Domain.Options;
 
 namespace UniHub.API.Middleware;
 
@@ -60,11 +60,11 @@ public class JwtMiddleware
         }
         catch (SecurityTokenExpiredException)
         {
-            throw new JwtAuthException(nameof(AuthMsg.AUTH0004), AuthMsg.AUTH0004, HttpStatusCode.Unauthorized);
+            throw new JwtAuthException(nameof(AuthMsg.ExpiredJwtToken), AuthMsg.ExpiredJwtToken, HttpStatusCode.Unauthorized);
         }
         catch (Exception)
         {
-            throw new JwtAuthException(nameof(AuthMsg.AUTH0003), AuthMsg.AUTH0003, HttpStatusCode.Unauthorized);
+            throw new JwtAuthException(nameof(AuthMsg.InvalidJwtToken), AuthMsg.InvalidJwtToken, HttpStatusCode.Unauthorized);
         }
 
         await _next(context);

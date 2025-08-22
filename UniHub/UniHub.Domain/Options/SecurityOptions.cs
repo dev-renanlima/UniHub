@@ -1,4 +1,4 @@
-﻿namespace UniHub.Infrastructure.Authentication;
+﻿namespace UniHub.Domain.Options;
 
 public class SecurityOptions
 {

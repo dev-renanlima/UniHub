@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using System.Net;
-using UniHub.Application.Exceptions;
 using UniHub.Application.Resources;
-using UniHub.Infrastructure.Authentication;
+using UniHub.Domain.Exceptions;
+using UniHub.Domain.Options;
 
 namespace UniHub.API.Middleware;
 
@@ -22,12 +22,12 @@ public class ApiKeyMiddleware
     {
         if (!context.Request.Headers.TryGetValue(ApiKeyHeaderName, out var extractedApiKey))
         {
-            throw new ApiKeyAuthException(nameof(AuthMsg.AUTH0001), AuthMsg.AUTH0001, HttpStatusCode.Unauthorized);
+            throw new ApiKeyAuthException(nameof(AuthMsg.MissingApiKey), AuthMsg.MissingApiKey, HttpStatusCode.Unauthorized);
         }
 
         if (!_apiKey.Equals(extractedApiKey))
         {
-            throw new ApiKeyAuthException(nameof(AuthMsg.AUTH0002), AuthMsg.AUTH0002, HttpStatusCode.Unauthorized);
+            throw new ApiKeyAuthException(nameof(AuthMsg.InvalidApiKey), AuthMsg.InvalidApiKey, HttpStatusCode.Unauthorized);
         }
 
         await _next(context);
