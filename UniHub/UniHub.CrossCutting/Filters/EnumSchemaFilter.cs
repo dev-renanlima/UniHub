@@ -2,9 +2,9 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace UniHub.CrossCutting.Options;
+namespace UniHub.CrossCutting.Filters;
 
-public class EnumSchemaFilterOptions : ISchemaFilter
+public class EnumSchemaFilter : ISchemaFilter
 {
     public void Apply(OpenApiSchema schema, SchemaFilterContext context)
     {

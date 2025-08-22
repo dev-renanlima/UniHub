@@ -17,11 +17,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Update="Resources\AuthMsg.Designer.cs">
-      <DependentUpon>AuthMsg.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
     <Compile Update="Resources\ApplicationMsg.Designer.cs">
       <DependentUpon>ApplicationMsg.resx</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -32,10 +27,6 @@
   <ItemGroup>
     <EmbeddedResource Update="Resources\ApiMsg.resx">
       <LastGenOutput>ApiMsg.Designer.cs</LastGenOutput>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\AuthMsg.resx">
-      <LastGenOutput>AuthMsg.Designer.cs</LastGenOutput>
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\ApplicationMsg.resx">

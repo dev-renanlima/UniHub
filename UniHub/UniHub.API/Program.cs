@@ -18,8 +18,11 @@ builder.Services.AddControllers(options =>
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
+// Options
+builder.Services.AddUniHubOptions();
+
 // Autenticação e Autorização
-builder.Services.AddUniHubAuthentication(builder.Configuration);
+builder.Services.AddUniHubAuth();
 
 // Versões da API e Swagger
 builder.Services.AddUniHubApiVersioning();
@@ -64,18 +67,22 @@ app.UseSwaggerUI(c =>
     }
 });
 
+// HTTPS
+app.UseHttpsRedirection();
+
+// CORS
+app.UseCors("AllowAll");
+
 // Middleware Exceções globais
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
-// Middleware API Key
+// Middleware de API Key
 app.UseMiddleware<ApiKeyMiddleware>();
 
-app.UseHttpsRedirection();
+// Middleware de Jwt
+app.UseMiddleware<JwtMiddleware>();
 
-// Ativa o CORS
-app.UseCors("AllowAll");
-
-// Auth
+// Auth 
 app.UseAuthentication();
 app.UseAuthorization();
 

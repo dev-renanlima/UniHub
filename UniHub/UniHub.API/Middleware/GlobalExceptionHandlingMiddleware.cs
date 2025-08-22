@@ -32,7 +32,24 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
             };
 
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)ex.StatusCode;
+            context.Response.StatusCode = problem.StatusCode;
+
+            await context.Response.WriteAsync(JsonSerializer.Serialize(problem));
+        }
+        catch (JwtAuthException ex)
+        {
+            _logger.LogWarning(ex, ex.Message);
+
+            ProblemResponse problem = new()
+            {
+                StatusCode = (int)ex.StatusCode,
+                ErrorCode = ex.ErrorCode,
+                Detail = ex.Message,
+                CorrelationId = ex.CorrelationId!
+            };
+
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = problem.StatusCode;
 
             await context.Response.WriteAsync(JsonSerializer.Serialize(problem));
         }
@@ -49,7 +66,7 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
             };
 
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)ex.StatusCode;
+            context.Response.StatusCode = problem.StatusCode;
 
             await context.Response.WriteAsync(JsonSerializer.Serialize(problem));
         }        

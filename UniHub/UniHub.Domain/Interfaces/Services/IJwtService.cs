@@ -2,7 +2,7 @@
 
 namespace UniHub.Domain.Interfaces.Services;
 
-public interface IJwtService
+public interface IJwtProvider
 {
     string GenerateToken(UserDTO userDTO);
 }

@@ -1,6 +1,8 @@
-﻿using System.Net;
+﻿using Microsoft.Extensions.Options;
+using System.Net;
 using UniHub.Application.Exceptions;
 using UniHub.Application.Resources;
+using UniHub.Infrastructure.Authentication;
 
 namespace UniHub.API.Middleware;
 
@@ -10,10 +12,10 @@ public class ApiKeyMiddleware
     private const string ApiKeyHeaderName = "X-API-KEY";
     private readonly string _apiKey;
 
-    public ApiKeyMiddleware(RequestDelegate next, IConfiguration configuration)
+    public ApiKeyMiddleware(RequestDelegate next, IOptions<SecurityOptions> securityOptions)
     {
         _next = next;
-        _apiKey = configuration.GetValue<string>("Authentication:ApiKey")!;
+        _apiKey = securityOptions.Value.ApiKey!;
     }
 
     public async Task InvokeAsync(HttpContext context)

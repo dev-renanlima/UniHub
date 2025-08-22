@@ -2,6 +2,7 @@
 
 public record LoginResponse
 (
+    GetUserResponse User,
     string Token
 );
   

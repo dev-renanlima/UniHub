@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using UniHub.CrossCutting.Options;
+using UniHub.CrossCutting.Filters;
 
 namespace UniHub.CrossCutting.Ioc;
 
@@ -15,14 +14,12 @@ public static class SwaggerExtensions
 
         services.AddSwaggerGen(c =>
         {
-            c.SchemaFilter<EnumSchemaFilterOptions>();
+            c.SchemaFilter<EnumSchemaFilter>();
 
             var xmlFile = "UniHub.API.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             c.IncludeXmlComments(xmlPath);
         });
-
-        services.ConfigureOptions<SwaggerGenSetupOptions>();
 
         return services;
     }
