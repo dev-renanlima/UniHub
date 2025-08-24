@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
+using UniHub.CrossCutting.Auth;
 
 namespace UniHub.CrossCutting.Ioc;
 
@@ -10,12 +12,37 @@ public static class AuthExtensions
     /// </summary>
     public static IServiceCollection AddUniHubAuth(this IServiceCollection services)
     {
-        // Configura o sistema de autenticação
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer();
+        // JWT
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(); // JwtBearerOptionsSetup
 
-        // Configura as políticas de autorização
-        services.AddAuthorization();
+        // Authorization
+        services.AddAuthorization(options =>
+        {
+            //options.FallbackPolicy = new AuthorizationPolicyBuilder()
+            //    .AddRequirements(new ApiKeyRequirement())
+            //    .Build();
+
+            options.AddPolicy(AuthPolicies.ApiKey, policy =>
+            {
+                policy.AddRequirements(new ApiKeyRequirement());
+            });
+
+            options.AddPolicy(AuthPolicies.ApiKeyAndJwt, policy =>
+            {
+                policy.RequireAuthenticatedUser();
+                policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
+                policy.AddRequirements(new ApiKeyRequirement());
+            });
+        });
+
+        // Handlers
+        services.AddSingleton<IAuthorizationHandler, ApiKeyAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationMiddlewareResultHandler, AuthorizationMiddlewareResultHandler>();
 
         return services;
     }

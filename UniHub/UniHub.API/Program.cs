@@ -59,12 +59,14 @@ var app = builder.Build();
 var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
 app.UseSwagger();
-app.UseSwaggerUI(c =>
+app.UseSwaggerUI(options =>
 {
     foreach (var desc in provider.ApiVersionDescriptions)
     {
-        c.SwaggerEndpoint($"/swagger/{desc.GroupName}/swagger.json", $"UniHub API {desc.GroupName.ToUpperInvariant()}");
+        options.SwaggerEndpoint($"/swagger/{desc.GroupName}/swagger.json", $"UniHub API {desc.GroupName.ToUpperInvariant()}");
     }
+
+    options.RoutePrefix = "unihub/swagger";
 });
 
 // HTTPS
@@ -73,16 +75,10 @@ app.UseHttpsRedirection();
 // CORS
 app.UseCors("AllowAll");
 
-// Middleware Exceções globais
+// Middleware de Exceções globais
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
-// Middleware de API Key
-app.UseMiddleware<ApiKeyMiddleware>();
-
-// Middleware de Jwt
-app.UseMiddleware<JwtMiddleware>();
-
-// Auth 
+// Autenticação/Autorização 
 app.UseAuthentication();
 app.UseAuthorization();
 

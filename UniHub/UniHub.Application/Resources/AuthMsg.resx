@@ -120,6 +120,9 @@
   <data name="MissingApiKey" xml:space="preserve">
     <value>É necessário informar a chave da API</value>
   </data>
+  <data name="MissingJwtToken" xml:space="preserve">
+    <value>É necessário informar o token JWT</value>
+  </data>
   <data name="InvalidApiKey" xml:space="preserve">
     <value>A chave da API informada é inválida</value>
   </data>

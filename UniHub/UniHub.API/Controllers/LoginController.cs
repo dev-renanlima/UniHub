@@ -6,6 +6,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using System.IdentityModel.Tokens.Jwt;
 using UniHub.API.Requests;
 using UniHub.API.Responses;
+using UniHub.CrossCutting.Auth;
 using UniHub.Domain.DTOs;
 using UniHub.Domain.Interfaces.Services;
 
@@ -32,6 +33,8 @@ public class LoginController : ControllerBase
     )]
     [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemResponse), StatusCodes.Status404NotFound)]
+    [Authorize(Policy = AuthPolicies.ApiKey)]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
         UserDTO userDTO = await _userService.GetUserByIdentifierAsync(request.ExternalIdentifier);
@@ -51,9 +54,8 @@ public class LoginController : ControllerBase
         Description = "Obtém o usuário que está autenticado"
     )]
     [ProducesResponseType(typeof(GetUserResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ProblemResponse), StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(ProblemResponse), StatusCodes.Status404NotFound)]
-    [Authorize]
+    [ProducesResponseType(typeof(ProblemResponse), StatusCodes.Status401Unauthorized)]    
+    [Authorize(Policy = AuthPolicies.ApiKeyAndJwt)]
     public async Task<IActionResult> Me()
     {
         string? internalIdentifier = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;

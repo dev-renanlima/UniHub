@@ -104,5 +104,14 @@ namespace UniHub.Application.Resources {
                 return ResourceManager.GetString("MissingApiKey", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to É necessário informar o token JWT.
+        /// </summary>
+        public static string MissingJwtToken {
+            get {
+                return ResourceManager.GetString("MissingJwtToken", resourceCulture);
+            }
+        }
     }
 }

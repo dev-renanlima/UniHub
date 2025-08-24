@@ -19,7 +19,7 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
         {
             await next(context);
         }
-        catch (BaseException ex) when (ex is ApiKeyAuthException or JwtAuthException or HttpRequestFailException) 
+        catch (BaseException ex) when (ex is AuthorizationException or HttpRequestFailException) 
         {
             _logger.LogWarning(ex, ex.Message);
 
@@ -38,7 +38,6 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
         }
         catch (Exception ex)
         {
-
             _logger.LogError(ex, ex.Message);
 
             ProblemResponse problem = new()
