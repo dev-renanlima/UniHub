@@ -15,7 +15,6 @@ public static class VersioningExtensions
     /// </summary>
     public static IServiceCollection AddUniHubApiVersioning(this IServiceCollection services)
     {
-        // Configura versionamento da API
         services.AddApiVersioning(options =>
         {
             options.ReportApiVersions = true;

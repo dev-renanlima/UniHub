@@ -7,6 +7,7 @@ public static class MappingConfigurations
 {
     public static IServiceCollection RegisterMaps(this IServiceCollection services)
     { 
+        services.RegisterLoginMaps();
         services.RegisterUserMaps();
         services.RegisterCourseMaps();
         services.RegisterCourseMemberMaps();

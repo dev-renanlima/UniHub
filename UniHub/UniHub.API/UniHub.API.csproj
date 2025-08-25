@@ -17,26 +17,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Validators\" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\UniHub.CrossCutting\UniHub.CrossCutting.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Compile Update="Resources\ApiMsg.Designer.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>ApiMsg.resx</DependentUpon>
-		</Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-		<EmbeddedResource Update="Resources\ApiMsg.resx">
-			<Generator>PublicResXFileCodeGenerator</Generator>
-			<LastGenOutput>ApiMsg.Designer.cs</LastGenOutput>
-		</EmbeddedResource>
 	</ItemGroup>
 
 </Project>

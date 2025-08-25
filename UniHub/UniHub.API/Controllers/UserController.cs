@@ -1,9 +1,9 @@
 ﻿using Asp.Versioning;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
-using UniHub.API.Model.User.CreateUser;
+using UniHub.API.Requests;
+using UniHub.API.Responses;
 using UniHub.Domain.DTOs;
-using UniHub.Domain.DTOs.Responses.User;
 using UniHub.Domain.Interfaces.Services;
 
 namespace UniHub.API.Controllers;
@@ -21,11 +21,13 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("create")]
-    public async Task<IActionResult> CreateUser(CreateUserModel createUserModel)
+    public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)
     {
-        UserDTO userDTO = createUserModel.Adapt<UserDTO>();
+        UserDTO userDTO = request.Adapt<UserDTO>();
 
-        CreateUserResponseDTO response = await _userService.CreateAsync(userDTO);
+        UserDTO createdUser = await _userService.CreateAsync(userDTO);
+
+        CreateUserResponse response = createdUser.Adapt<CreateUserResponse>();
 
         return StatusCode(StatusCodes.Status201Created, response);
     }
@@ -33,7 +35,9 @@ public class UserController : ControllerBase
     [HttpGet("{identifier}")]
     public async Task<IActionResult> GetUserByIdentifier([FromRoute] string identifier)
     {
-        GetUserResponseDTO? response = await _userService.GetUserByIdentifierAsync(identifier);
+        UserDTO userDTO = await _userService.GetUserByIdentifierAsync(identifier);
+
+        CreateUserResponse response = userDTO.Adapt<CreateUserResponse>();
 
         return StatusCode(StatusCodes.Status200OK, response);
     }

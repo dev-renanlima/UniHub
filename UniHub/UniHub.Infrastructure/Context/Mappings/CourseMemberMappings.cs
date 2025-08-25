@@ -14,9 +14,7 @@ namespace UniHub.Infrastructure.Context.Mappings
                    .WithMany(c => c.CourseMembers)
                    .HasForeignKey(cm => cm.CourseId);
 
-            builder.HasOne(cm => cm.User)
-                   .WithMany(u => u.Courses)
-                   .HasForeignKey(cm => cm.UserId);
+            builder.HasOne(cm => cm.User);
         }
     }
 }

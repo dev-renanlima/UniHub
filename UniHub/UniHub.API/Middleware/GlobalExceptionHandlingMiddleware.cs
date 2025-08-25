@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
-using UniHub.API.Model;
-using UniHub.API.Resources;
-using UniHub.Application.Exceptions;
+using UniHub.API.Responses;
+using UniHub.Application.Resources;
+using UniHub.Domain.Exceptions;
 
 namespace UniHub.API.Middleware;
 
@@ -20,7 +19,7 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
         {
             await next(context);
         }
-        catch (HttpRequestFailException ex)
+        catch (BaseException ex) when (ex is AuthorizationException or HttpRequestFailException) 
         {
             _logger.LogWarning(ex, ex.Message);
 
@@ -29,17 +28,16 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
                 StatusCode = (int)ex.StatusCode,
                 ErrorCode = ex.ErrorCode,
                 Detail = ex.Message,
-                CorrelationId = ex.CorrelationId
+                CorrelationId = ex.CorrelationId!
             };
 
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)ex.StatusCode;
+            context.Response.StatusCode = problem.StatusCode;
 
             await context.Response.WriteAsync(JsonSerializer.Serialize(problem));
         }
         catch (Exception ex)
         {
-
             _logger.LogError(ex, ex.Message);
 
             ProblemResponse problem = new()

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace UniHub.API.Resources {
+namespace UniHub.Application.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace UniHub.API.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("UniHub.API.Resources.ApiMsg", typeof(ApiMsg).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("UniHub.Application.Resources.ApiMsg", typeof(ApiMsg).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,7 +61,7 @@ namespace UniHub.API.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Houve um erro no sistema. Tente novamente mais tarde..
+        ///   Looks up a localized string similar to Houve um erro no sistema. Tente novamente mais tarde.
         /// </summary>
         public static string API0001 {
             get {

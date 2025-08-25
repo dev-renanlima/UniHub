@@ -2,7 +2,6 @@
 using UniHub.API.Model.Course.AddMemberByCode;
 using UniHub.Domain.DTOs;
 using UniHub.Domain.DTOs.Responses.Course;
-using UniHub.Domain.DTOs.Responses.User;
 using UniHub.Domain.Entities;
 using UniHub.Domain.VOs;
 
@@ -18,7 +17,7 @@ public static class CourseMemberMappingConfigurations
                 .Map(dest => dest.UserIdentifier, src => src.Body!.UserIdentifier)
                 .Map(dest => dest.CourseCode, src => src.Body!.CourseCode);
 
-        TypeAdapterConfig<(GetCourseResponseDTO Course, GetUserResponseDTO User), CourseMember>
+        TypeAdapterConfig<(GetCourseResponseDTO Course, UserDTO User), CourseMember>
             .NewConfig()
                 .Map(dest => dest.CourseId, src => src.Course.Id)
                 .Map(dest => dest.Course, src => new Course // Temporário
@@ -43,7 +42,7 @@ public static class CourseMemberMappingConfigurations
         #endregion
 
         #region Course - GetMembersByCourseCode
-        TypeAdapterConfig<(Course Course, GetUserResponseDTO User, List<CourseMemberVO> CourseMembers), GetCourseResponseDTO>
+        TypeAdapterConfig<(Course Course, UserDTO User, List<CourseMemberVO> CourseMembers), GetCourseResponseDTO>
             .NewConfig()
                 .Map(dest => dest.Id, src => src.Course.Id!)
                 .Map(dest => dest.CourseIdentifier, src => src.Course.InternalIdentifier!)

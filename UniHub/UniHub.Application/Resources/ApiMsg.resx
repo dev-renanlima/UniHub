@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="API0001" xml:space="preserve">
-    <value>Houve um erro no sistema. Tente novamente mais tarde.</value>
+    <value>Houve um erro no sistema. Tente novamente mais tarde</value>
   </data>
   <data name="API0002" xml:space="preserve">
     <value>O campo {0} é obrigatório</value>

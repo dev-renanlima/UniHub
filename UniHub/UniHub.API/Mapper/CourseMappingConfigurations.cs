@@ -2,7 +2,6 @@
 using UniHub.API.Model.Course.CreateCourse;
 using UniHub.Domain.DTOs;
 using UniHub.Domain.DTOs.Responses.Course;
-using UniHub.Domain.DTOs.Responses.User;
 using UniHub.Domain.Entities;
 using UniHub.Domain.Extensions;
 using UniHub.Domain.VOs;
@@ -20,7 +19,7 @@ public static class CourseMappingConfigurations
                 .Map(dest => dest.Name, src => src.Body!.Name)
                 .Map(dest => dest.Code, src => NumberExtensions.GenerateRandomCodeByDate());
 
-        TypeAdapterConfig<(CourseDTO Course, GetUserResponseDTO User), Course>
+        TypeAdapterConfig<(CourseDTO Course, UserDTO User), Course>
             .NewConfig()
                 .Map(dest => dest.UserId, src => src.User.Id)
                 .Map(dest => dest.User, src => src.User)
@@ -36,7 +35,7 @@ public static class CourseMappingConfigurations
         TypeAdapterConfig<CourseVO, CourseByUserDTO>
             .NewConfig();
 
-        TypeAdapterConfig<(GetUserResponseDTO User, List<CourseVO> Courses), GetCoursesByUserResponseDTO>
+        TypeAdapterConfig<(UserDTO User, List<CourseVO> Courses), GetCoursesByUserResponseDTO>
             .NewConfig()
                 .Map(dest => dest.UserIdentifier, src => src.User.ExternalIdentifier!)
                 .Map(dest => dest.UserName, src => src.User.Name)

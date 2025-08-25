@@ -7,14 +7,17 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Include="Context\Migrations\Create\CreateFunctions.sql" />
-	  <Compile Include="Context\Migrations\Drop\DropTables.sql" />
+		<Compile Include="Context\Migrations\Create\CreateFunctions.sql" />
+		<Compile Include="Context\Migrations\Drop\DropTables.sql" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.19" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.7" />
-		<!--<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.7" />-->
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.14.0" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
 	</ItemGroup>
 
 	<ItemGroup>

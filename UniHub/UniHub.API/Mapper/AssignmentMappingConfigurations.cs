@@ -3,7 +3,6 @@ using UniHub.API.Model.Assignment;
 using UniHub.Domain.DTOs;
 using UniHub.Domain.DTOs.Responses.Assignment;
 using UniHub.Domain.DTOs.Responses.Course;
-using UniHub.Domain.DTOs.Responses.User;
 using UniHub.Domain.Entities;
 using UniHub.Domain.Enums;
 
@@ -27,7 +26,7 @@ public static class AssignmentMappingConfigurations
                 .Map(dest => dest.ExpirationDate, src => src.Body!.ExpirationDate)
                 .Map(dest => dest.AssignmentAttachments, src => src.Body!.AssignmentAttachments ?? new());
 
-        TypeAdapterConfig<(GetCourseResponseDTO Course, GetUserResponseDTO User, AssignmentDTO Assignment), Assignment>
+        TypeAdapterConfig<(GetCourseResponseDTO Course, UserDTO User, AssignmentDTO Assignment), Assignment>
             .NewConfig()
                 .Map(dest => dest.CourseId, src => src.Course.Id)
                 .Map(dest => dest.Course, src => src.Course)
