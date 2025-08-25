@@ -7,14 +7,14 @@ using UniHub.Domain.Options;
 
 namespace UniHub.CrossCutting.OptionsSetup;
 
-public class JwtBearerOptionsSetup : IConfigureOptions<JwtBearerOptions>
+public class JwtBearerOptionsSetup : IPostConfigureOptions<JwtBearerOptions>
 {
     private readonly SecurityOptions _security;
 
     public JwtBearerOptionsSetup(IOptions<SecurityOptions> security)
         => _security = security.Value;
 
-    public void Configure(JwtBearerOptions options)
+    public void PostConfigure(string? name, JwtBearerOptions options)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_security.SecretKey!));
 
@@ -49,7 +49,7 @@ public class JwtBearerOptionsSetup : IConfigureOptions<JwtBearerOptions>
 
             OnChallenge = context =>
             {
-                context.HandleResponse(); 
+                context.HandleResponse();
                 return Task.CompletedTask;
             },
 

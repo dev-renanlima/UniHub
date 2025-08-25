@@ -3,7 +3,7 @@ using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using UniHub.API.Requests;
 using UniHub.API.Responses;
 using UniHub.CrossCutting.Auth;
@@ -58,7 +58,7 @@ public class LoginController : ControllerBase
     [Authorize(Policy = AuthPolicies.ApiKeyAndJwt)]
     public async Task<IActionResult> Me()
     {
-        string? internalIdentifier = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        string? internalIdentifier = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         UserDTO userDTO = await _userService.GetUserByIdentifierAsync(internalIdentifier!);
 
